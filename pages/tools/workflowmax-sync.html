@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkflowMax Sync - Bailey Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+  <header class="metadata-bar">
+    <div class="metadata-bar__inner">
+      <div class="metadata-item">
+        <span class="metadata-label">Integration</span>
+        <span class="metadata-value">WorkflowMax Sync</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Status</span>
+        <span class="metadata-badge" id="connectionStatus">Not Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <nav class="nav-sidebar">
+      <div class="nav-logo">
+        <h1><a href="../../index.html" style="color: inherit;">ISO19650 Dashboard</a></h1>
+        <p style="font-size: 0.75rem; color: #666;">WorkflowMax Integration</p>
+      </div>
+      <div class="nav-section">
+        <a href="#1.0" class="nav-link nav-link--section">1.0 Setup</a>
+      </div>
+      <div class="nav-section">
+        <a href="#2.0" class="nav-link nav-link--section">2.0 Sync Projects</a>
+      </div>
+      <div class="nav-section">
+        <a href="#3.0" class="nav-link nav-link--section">3.0 Synced Projects</a>
+      </div>
+      <div class="nav-section">
+        <a href="../../index.html" class="nav-link nav-link--subsection">← Back to Dashboard</a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <!-- Section 1.0: Setup -->
+      <section id="1.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">1.0</span>
+          <h2 class="section-title">WorkflowMax Setup</h2>
+        </div>
+        <div class="section-content">
+          <div class="insight-box insight-box--highlight">
+            <div class="insight-box__icon">🔗</div>
+            <div class="insight-box__content">
+              <strong>Connect to WorkflowMax</strong>
+              <p>This integration is <strong>READ-ONLY</strong> and will never modify your WorkflowMax data. It only reads project information to populate the ISO19650 dashboard.</p>
+            </div>
+          </div>
+
+          <!-- Connection Status -->
+          <div class="widget widget--full mt-lg">
+            <div class="widget__header">
+              <h3 class="widget__title">Connection Status</h3>
+            </div>
+            <div class="widget__body">
+              <div id="connectedView" class="hidden">
+                <div class="insight-box insight-box--success">
+                  <div class="insight-box__icon">✓</div>
+                  <div class="insight-box__content">
+                    <strong>Connected to WorkflowMax</strong>
+                    <p id="lastSyncInfo">Never synced</p>
+                  </div>
+                </div>
+                <div class="flex flex-center flex-gap-md mt-lg">
+                  <button id="syncNowBtn" class="btn btn--primary">Sync Projects Now</button>
+                  <button id="disconnectBtn" class="btn btn--danger">Disconnect</button>
+                </div>
+              </div>
+
+              <div id="disconnectedView">
+                <p class="text-muted mb-lg">To connect to WorkflowMax, you need to create an OAuth app and provide the credentials.</p>
+
+                <!-- Step 1: Create App -->
+                <div class="subsection">
+                  <div class="subsection-header">
+                    <span class="subsection-number">1.1</span>
+                    <h3 class="subsection-title">Step 1: Create WorkflowMax OAuth App</h3>
+                  </div>
+
+                  <div class="card">
+                    <div class="card__content">
+                      <ol>
+                        <li>Go to WorkflowMax and navigate to: <strong>Settings → Apps → My Apps → Create New App</strong></li>
+                        <li>Fill in the following details:</li>
+                      </ol>
+
+                      <div class="mt-md">
+                        <table class="data-table">
+                          <tbody>
+                            <tr>
+                              <td><strong>App Name</strong></td>
+                              <td><code>BP ISO19650 Dashboard</code></td>
+                            </tr>
+                            <tr>
+                              <td><strong>Company/Application URL</strong></td>
+                              <td><code id="appUrl">https://archiflux.github.io/BaileyISO19650Dashboard</code>
+                                  <button class="btn btn--small btn--secondary ml-sm" onclick="copyToClipboard('appUrl')">Copy</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>Redirect URI</strong></td>
+                              <td><code id="redirectUri">Loading...</code>
+                                  <button class="btn btn--small btn--secondary ml-sm" onclick="copyToClipboard('redirectUri')">Copy</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>Scopes</strong></td>
+                              <td><code>workflowmax</code> (Read-only access)</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <p class="mt-md"><strong>Note:</strong> After creating the app, WorkflowMax will give you a <strong>Client ID</strong> and <strong>Client Secret</strong>. Copy these for the next step.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2: Enter Credentials -->
+                <div class="subsection mt-lg">
+                  <div class="subsection-header">
+                    <span class="subsection-number">1.2</span>
+                    <h3 class="subsection-title">Step 2: Enter OAuth Credentials</h3>
+                  </div>
+
+                  <form id="credentialsForm">
+                    <div class="widget-grid widget-grid--2col">
+                      <div class="form-group">
+                        <label class="form-label" for="clientId">Client ID *</label>
+                        <input type="text" id="clientId" name="clientId" class="form-input" required
+                               placeholder="From WorkflowMax app settings">
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label" for="clientSecret">Client Secret (Optional)</label>
+                        <input type="password" id="clientSecret" name="clientSecret" class="form-input"
+                               placeholder="Optional for public apps">
+                        <small class="text-muted">Leave blank if using PKCE flow (recommended)</small>
+                      </div>
+                    </div>
+
+                    <div class="text-center mt-lg">
+                      <button type="submit" class="btn btn--accent btn--large">Connect to WorkflowMax</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2.0: Sync Projects -->
+      <section id="2.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">2.0</span>
+          <h2 class="section-title">Sync Projects from WorkflowMax</h2>
+        </div>
+        <div class="section-content">
+          <div class="insight-box insight-box--recommendation">
+            <div class="insight-box__icon">📥</div>
+            <div class="insight-box__content">
+              <strong>Import Project Data</strong>
+              <p>Sync active projects from WorkflowMax to automatically populate:</p>
+              <ul class="mb-0">
+                <li>Project name, number, and description</li>
+                <li><strong>ISO 19650 - Project Identifier</strong> (becomes ISO number)</li>
+                <li>Client information</li>
+                <li>Team members (Project Lead, Information Manager)</li>
+                <li>RIBA Stage → ISO19650 Phase mapping</li>
+                <li>All custom fields (Site Address, BSR Number, etc.)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="widget widget--full mt-lg" id="syncSection">
+            <div class="widget__header">
+              <h3 class="widget__title">Available Projects</h3>
+            </div>
+            <div class="widget__body">
+              <div id="notConnectedMessage">
+                <p class="text-muted text-center">Please connect to WorkflowMax first to see available projects.</p>
+              </div>
+
+              <div id="projectListContainer" class="hidden">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3.0: Synced Projects -->
+      <section id="3.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">3.0</span>
+          <h2 class="section-title">Synced Projects</h2>
+        </div>
+        <div class="section-content">
+          <div id="syncedProjectsContainer">
+            <p class="text-muted text-center">No synced projects yet.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../assets/js/dashboard.js"></script>
+  <script src="../../assets/js/workflowmax-api.js"></script>
+  <script>
+    // Initialize
+    let isConnected = false;
+
+    // Set the redirect URI
+    document.addEventListener('DOMContentLoaded', function() {
+      const redirectUri = window.location.origin + window.location.pathname.replace('workflowmax-sync.html', '') + '../../oauth-callback.html';
+      document.getElementById('redirectUri').textContent = redirectUri;
+
+      // Check if we're returning from OAuth
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
+
+      if (error) {
+        Notifications.show('Authorization failed: ' + error, 'danger');
+      } else if (code) {
+        handleOAuthCallback(code);
+      }
+
+      // Check connection status
+      checkConnectionStatus();
+
+      // Load synced projects
+      loadSyncedProjects();
+    });
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        Notifications.show('Copied to clipboard!', 'success');
+      }).catch(() => {
+        Notifications.show('Failed to copy', 'danger');
+      });
+    }
+
+    function checkConnectionStatus() {
+      const status = WorkflowMaxAPI.getSyncStatus();
+      isConnected = status.isAuthorized;
+
+      const statusBadge = document.getElementById('connectionStatus');
+      const connectedView = document.getElementById('connectedView');
+      const disconnectedView = document.getElementById('disconnectedView');
+
+      if (isConnected) {
+        statusBadge.textContent = 'Connected';
+        statusBadge.className = 'metadata-badge metadata-badge--approved';
+        connectedView.classList.remove('hidden');
+        disconnectedView.classList.add('hidden');
+
+        // Update last sync info
+        if (status.lastSync) {
+          document.getElementById('lastSyncInfo').textContent =
+            `Last synced: ${status.lastSync.toLocaleString()}`;
+        }
+
+        // Load available projects
+        loadAvailableProjects();
+      } else {
+        statusBadge.textContent = 'Not Connected';
+        statusBadge.className = 'metadata-badge metadata-badge--draft';
+        connectedView.classList.add('hidden');
+        disconnectedView.classList.remove('hidden');
+      }
+    }
+
+    // Handle credentials form submission
+    document.getElementById('credentialsForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const clientId = document.getElementById('clientId').value.trim();
+      const clientSecret = document.getElementById('clientSecret').value.trim();
+
+      if (!clientId) {
+        Notifications.show('Please enter Client ID', 'warning');
+        return;
+      }
+
+      // Save credentials
+      localStorage.setItem('wfm_client_id', clientId);
+
+      // Initialize API
+      WorkflowMaxAPI.init(clientId, clientSecret || null);
+
+      // Start OAuth flow
+      try {
+        await WorkflowMaxAPI.authorize();
+      } catch (error) {
+        Notifications.show('Authorization failed: ' + error.message, 'danger');
+      }
+    });
+
+    async function handleOAuthCallback(code) {
+      try {
+        Notifications.show('Completing authorization...', 'info');
+
+        // Load saved credentials
+        const clientId = localStorage.getItem('wfm_client_id');
+        const clientSecret = sessionStorage.getItem('wfm_client_secret');
+
+        if (!clientId) {
+          throw new Error('Client ID not found. Please enter credentials again.');
+        }
+
+        WorkflowMaxAPI.init(clientId, clientSecret);
+
+        // Note: This will likely fail due to CORS
+        // You may need to use a serverless function as a proxy
+        await WorkflowMaxAPI.exchangeCodeForToken(code);
+
+        Notifications.show('Successfully connected to WorkflowMax!', 'success');
+        checkConnectionStatus();
+
+        // Clear URL parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (error) {
+        console.error('OAuth callback error:', error);
+        Notifications.show('Connection failed: ' + error.message + '. You may need to configure a server-side proxy.', 'danger');
+      }
+    }
+
+    // Disconnect
+    document.getElementById('disconnectBtn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to disconnect from WorkflowMax?')) {
+        WorkflowMaxAPI.clearTokens();
+        localStorage.removeItem('wfm_client_id');
+        Notifications.show('Disconnected from WorkflowMax', 'success');
+        checkConnectionStatus();
+      }
+    });
+
+    // Sync now button
+    document.getElementById('syncNowBtn').addEventListener('click', async function() {
+      this.disabled = true;
+      this.textContent = 'Syncing...';
+
+      try {
+        const synced = await WorkflowMaxAPI.syncAllActiveJobs();
+        WorkflowMaxAPI.updateLastSync();
+        Notifications.show(`Successfully synced ${synced.length} projects!`, 'success');
+        checkConnectionStatus();
+        loadSyncedProjects();
+      } catch (error) {
+        Notifications.show('Sync failed: ' + error.message, 'danger');
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Sync Projects Now';
+      }
+    });
+
+    async function loadAvailableProjects() {
+      const container = document.getElementById('projectListContainer');
+      const notConnectedMsg = document.getElementById('notConnectedMessage');
+
+      try {
+        const jobs = await WorkflowMaxAPI.getActiveJobs();
+
+        notConnectedMsg.classList.add('hidden');
+        container.classList.remove('hidden');
+
+        if (!jobs.Jobs || jobs.Jobs.length === 0) {
+          container.innerHTML = '<p class="text-muted text-center">No active projects found in WorkflowMax.</p>';
+          return;
+        }
+
+        const html = `
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Job Number</th>
+                  <th>Job Name</th>
+                  <th>Client</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${jobs.Jobs.map(job => `
+                  <tr>
+                    <td><strong>${job.Number}</strong></td>
+                    <td>${job.Name}</td>
+                    <td>${job.Client?.Name || 'N/A'}</td>
+                    <td><span class="status-badge status-badge--success">${job.Status}</span></td>
+                    <td>
+                      <button class="btn btn--small btn--primary" onclick="syncSingleJob('${job.ID}')">
+                        Import
+                      </button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        container.innerHTML = html;
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+        container.innerHTML = `<p class="text-danger text-center">Failed to load projects: ${error.message}</p>`;
+      }
+    }
+
+    async function syncSingleJob(jobId) {
+      try {
+        const project = await WorkflowMaxAPI.syncJobToLocal(jobId);
+        Notifications.show('Project imported successfully!', 'success');
+        loadSyncedProjects();
+      } catch (error) {
+        Notifications.show('Import failed: ' + error.message, 'danger');
+      }
+    }
+
+    function loadSyncedProjects() {
+      const projects = BaileyDB.getProjects().filter(p => p.source === 'WorkflowMax');
+      const container = document.getElementById('syncedProjectsContainer');
+
+      if (projects.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No synced projects yet. Import projects from WorkflowMax above.</p>';
+        return;
+      }
+
+      const html = `
+        <div class="widget widget--full">
+          <div class="widget__body widget__body--no-padding">
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Project Name</th>
+                    <th>ISO Number</th>
+                    <th>WFM Job Number</th>
+                    <th>Last Synced</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${projects.map(project => `
+                    <tr>
+                      <td><strong>${project.projectName}</strong></td>
+                      <td><code>${project.isoNumber}</code></td>
+                      <td>${project.wfmJobNumber}</td>
+                      <td>${new Date(project.syncedAt).toLocaleString()}</td>
+                      <td>
+                        <a href="project-list.html" class="btn btn--small btn--secondary">View</a>
+                        <button class="btn btn--small btn--primary" onclick="resyncProject('${project.wfmJobId}')">Re-sync</button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    async function resyncProject(jobId) {
+      try {
+        await WorkflowMaxAPI.syncJobToLocal(jobId);
+        Notifications.show('Project re-synced successfully!', 'success');
+        loadSyncedProjects();
+      } catch (error) {
+        Notifications.show('Re-sync failed: ' + error.message, 'danger');
+      }
+    }
+
+    // Load saved client ID if exists
+    const savedClientId = localStorage.getItem('wfm_client_id');
+    if (savedClientId) {
+      document.getElementById('clientId').value = savedClientId;
+      WorkflowMaxAPI.init(savedClientId);
+    }
+  </script>
+</body>
+</html>
