@@ -12,6 +12,8 @@ const WorkflowMaxAPI = {
     redirectUri: window.location.origin + '/BaileyISO19650Dashboard/oauth-callback.html',
     authEndpoint: 'https://login.xero.com/identity/connect/authorize',
     tokenEndpoint: 'https://identity.xero.com/connect/token',
+    tokenProxy: '/.netlify/functions/token-exchange', // Serverless function to avoid CORS
+    useProxy: true, // Use proxy by default to avoid CORS issues
     apiBase: 'https://api.xero.com/workflowmax/3.0',
     scope: 'offline_access openid profile email', // Basic scopes, WorkflowMax auto-granted if available
   },
@@ -109,7 +111,7 @@ const WorkflowMaxAPI = {
 
   /**
    * Exchange authorization code for access token
-   * Note: This typically requires a server-side proxy due to CORS
+   * Uses serverless proxy function to avoid CORS issues
    */
   async exchangeCodeForToken(code) {
     const codeVerifier = sessionStorage.getItem('wfm_code_verifier');
@@ -119,33 +121,40 @@ const WorkflowMaxAPI = {
       throw new Error('Code verifier not found. Please restart the authorization process.');
     }
 
-    const body = new URLSearchParams({
+    // Prepare request body
+    const requestBody = {
       grant_type: 'authorization_code',
       client_id: this.config.clientId,
       code: code,
       redirect_uri: this.config.redirectUri,
       code_verifier: codeVerifier
-    });
+    };
 
     // If client secret is provided, include it
     if (clientSecret) {
-      body.append('client_secret', clientSecret);
+      requestBody.client_secret = clientSecret;
     }
 
     try {
-      // Note: This will likely fail due to CORS restrictions
-      // You may need to use a serverless function or proxy
-      const response = await fetch(this.config.tokenEndpoint, {
+      // Use proxy endpoint to avoid CORS
+      const endpoint = this.config.useProxy ? this.config.tokenProxy : this.config.tokenEndpoint;
+      const headers = this.config.useProxy
+        ? { 'Content-Type': 'application/json' }
+        : { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+      const body = this.config.useProxy
+        ? JSON.stringify(requestBody)
+        : new URLSearchParams(requestBody).toString();
+
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body.toString()
+        headers: headers,
+        body: body
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error_description || 'Token exchange failed');
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error_description || error.error || 'Token exchange failed');
       }
 
       const tokens = await response.json();

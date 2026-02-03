@@ -1,0 +1,29 @@
+# Netlify Configuration for Bailey Partnership ISO19650 Dashboard
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Redirect rules (none needed for now)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  conditions = {Role = ["admin"]}
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Function-specific settings
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Environment variables (set these in Netlify dashboard)
+# None required - client credentials come from browser
