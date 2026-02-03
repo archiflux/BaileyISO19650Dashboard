@@ -68,7 +68,7 @@
         messageEl.textContent = errorDescription || error;
         setTimeout(() => {
           window.close();
-          window.location.href = '../pages/tools/workflowmax-sync.html?error=' + encodeURIComponent(error);
+          window.location.href = '/BaileyISO19650Dashboard/pages/tools/workflowmax-sync.html?error=' + encodeURIComponent(error);
         }, 3000);
         return;
       }
@@ -81,7 +81,7 @@
         statusEl.className = 'error';
         messageEl.textContent = 'State mismatch. Please try again.';
         setTimeout(() => {
-          window.location.href = '../pages/tools/workflowmax-sync.html?error=state_mismatch';
+          window.location.href = '/BaileyISO19650Dashboard/pages/tools/workflowmax-sync.html?error=state_mismatch';
         }, 3000);
         return;
       }
@@ -98,7 +98,7 @@
 
         // Redirect back to the sync page
         setTimeout(() => {
-          window.location.href = '../pages/tools/workflowmax-sync.html?code=' + code;
+          window.location.href = '/BaileyISO19650Dashboard/pages/tools/workflowmax-sync.html?code=' + code;
         }, 1500);
       } else {
         spinnerEl.style.display = 'none';
@@ -106,7 +106,7 @@
         statusEl.className = 'error';
         messageEl.textContent = 'No authorization code received.';
         setTimeout(() => {
-          window.location.href = '../pages/tools/workflowmax-sync.html?error=no_code';
+          window.location.href = '/BaileyISO19650Dashboard/pages/tools/workflowmax-sync.html?error=no_code';
         }, 3000);
       }
     })();
