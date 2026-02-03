@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Setup - Bailey Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+  <header class="metadata-bar">
+    <div class="metadata-bar__inner">
+      <div class="metadata-item">
+        <span class="metadata-label">Tool</span>
+        <span class="metadata-value">New Project Setup</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Standard</span>
+        <span class="metadata-value">BS EN ISO 19650-2</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <nav class="nav-sidebar">
+      <div class="nav-logo">
+        <h1><a href="../../index.html" style="color: inherit;">ISO19650 Dashboard</a></h1>
+        <p style="font-size: 0.75rem; color: #666;">Project Setup Wizard</p>
+      </div>
+      <div class="nav-section">
+        <a href="#1.0" class="nav-link nav-link--section">1.0 Project Information</a>
+      </div>
+      <div class="nav-section">
+        <a href="#2.0" class="nav-link nav-link--section">2.0 ISO19650 Details</a>
+      </div>
+      <div class="nav-section">
+        <a href="#3.0" class="nav-link nav-link--section">3.0 Team & Resources</a>
+      </div>
+      <div class="nav-section">
+        <a href="../../index.html" class="nav-link nav-link--subsection">← Back to Dashboard</a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <form id="projectSetupForm">
+        <!-- Section 1.0: Project Information -->
+        <section id="1.0" class="report-section">
+          <div class="section-band">
+            <span class="section-number">1.0</span>
+            <h2 class="section-title">Project Information</h2>
+          </div>
+          <div class="section-content">
+            <div class="widget-grid widget-grid--2col">
+              <div class="form-group">
+                <label class="form-label" for="projectName">Project Name *</label>
+                <input type="text" id="projectName" name="projectName" class="form-input" required
+                       placeholder="e.g., New Office Building London">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectNumber">Project Number *</label>
+                <input type="text" id="projectNumber" name="projectNumber" class="form-input" required
+                       placeholder="e.g., 25001">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="clientName">Client Name *</label>
+                <input type="text" id="clientName" name="clientName" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectLocation">Project Location</label>
+                <input type="text" id="projectLocation" name="projectLocation" class="form-input"
+                       placeholder="Address or location">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectValue">Project Value (£)</label>
+                <input type="number" id="projectValue" name="projectValue" class="form-input" step="1000"
+                       placeholder="0">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectStartDate">Start Date</label>
+                <input type="date" id="projectStartDate" name="projectStartDate" class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectPhase">Current Phase *</label>
+                <select id="projectPhase" name="projectPhase" class="form-select" required>
+                  <option value="">Select phase...</option>
+                  <option value="tender">Tender Response (5.3)</option>
+                  <option value="appointment">Appointment (5.4)</option>
+                  <option value="mobilisation">Mobilisation (5.5)</option>
+                  <option value="production">Collaborative Production (5.6)</option>
+                  <option value="delivery">Information Model Delivery (5.7)</option>
+                  <option value="closeout">Project Close-out (5.8)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectType">Project Type</label>
+                <select id="projectType" name="projectType" class="form-select">
+                  <option value="">Select type...</option>
+                  <option value="newbuild">New Build</option>
+                  <option value="refurbishment">Refurbishment</option>
+                  <option value="extension">Extension</option>
+                  <option value="fitout">Fit-out</option>
+                  <option value="infrastructure">Infrastructure</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group mt-lg">
+              <label class="form-label" for="projectDescription">Project Description</label>
+              <textarea id="projectDescription" name="projectDescription" class="form-textarea" rows="4"
+                        placeholder="Brief description of the project scope and objectives"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2.0: ISO19650 Details -->
+        <section id="2.0" class="report-section">
+          <div class="section-band">
+            <span class="section-number">2.0</span>
+            <h2 class="section-title">ISO19650 Details</h2>
+          </div>
+          <div class="section-content">
+            <div class="insight-box insight-box--highlight mb-lg">
+              <div class="insight-box__icon">ℹ️</div>
+              <div class="insight-box__content">
+                <strong>ISO19650 Naming Convention</strong>
+                <p>Format: <code>Project-Originator-Functional-Spatial-Form-Discipline-Number</code></p>
+                <p>Example: <code>25001-BPG-XX-XX-T-O-0001</code></p>
+              </div>
+            </div>
+
+            <div class="widget-grid widget-grid--2col">
+              <div class="form-group">
+                <label class="form-label" for="isoProject">ISO Project Code *</label>
+                <input type="text" id="isoProject" name="isoProject" class="form-input" required
+                       placeholder="e.g., 25001" maxlength="10">
+                <small class="text-muted">First part of ISO naming convention</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="isoOriginator">Originator Code *</label>
+                <input type="text" id="isoOriginator" name="isoOriginator" class="form-input" value="BPG" required
+                       placeholder="e.g., BPG" maxlength="5">
+                <small class="text-muted">Usually BPG for Bailey Partnership Group</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="baileyRole">Bailey Partnership Role *</label>
+                <select id="baileyRole" name="baileyRole" class="form-select" required>
+                  <option value="">Select role...</option>
+                  <option value="lead_appointed">Lead Appointed Party</option>
+                  <option value="appointed">Appointed Party</option>
+                  <option value="consultant">Consultant</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cdeProvider">Common Data Environment</label>
+                <select id="cdeProvider" name="cdeProvider" class="form-select">
+                  <option value="autodesk_acc">Autodesk ACC (Recommended)</option>
+                  <option value="bim360">BIM 360</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group mt-lg">
+              <label class="form-label">ISO19650 Preview</label>
+              <div class="card">
+                <div class="card__content">
+                  <p class="mb-sm"><strong>Generated ISO Number:</strong></p>
+                  <code id="isoPreview" style="font-size: 1.25rem; color: var(--color-primary-band);">
+                    XXXXX-BPG-XX-XX-T-O-0001
+                  </code>
+                  <p class="text-muted mt-md mb-0">This will be the base for all project documents</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3.0: Team & Resources -->
+        <section id="3.0" class="report-section">
+          <div class="section-band">
+            <span class="section-number">3.0</span>
+            <h2 class="section-title">Team & Resources</h2>
+          </div>
+          <div class="section-content">
+            <div class="widget-grid widget-grid--2col">
+              <div class="form-group">
+                <label class="form-label" for="projectLead">Project Lead *</label>
+                <input type="text" id="projectLead" name="projectLead" class="form-input" required
+                       placeholder="Name of project lead">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="bimManager">BIM Manager / Information Manager</label>
+                <input type="text" id="bimManager" name="bimManager" class="form-input"
+                       placeholder="Name of BIM/IM manager">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="taskTeamManager">Task Team Manager</label>
+                <input type="text" id="taskTeamManager" name="taskTeamManager" class="form-input"
+                       placeholder="Name of task team manager">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="documentController">Document Controller</label>
+                <input type="text" id="documentController" name="documentController" class="form-input"
+                       placeholder="Name of document controller">
+              </div>
+            </div>
+
+            <div class="form-group mt-lg">
+              <label class="form-label" for="teamNotes">Team Notes</label>
+              <textarea id="teamNotes" name="teamNotes" class="form-textarea" rows="3"
+                        placeholder="Additional team members, consultants, or resource notes"></textarea>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-number">3.1</span>
+                <h3 class="subsection-title">Required Documents</h3>
+              </div>
+              <div class="insight-box insight-box--recommendation">
+                <div class="insight-box__icon">📋</div>
+                <div class="insight-box__content">
+                  <strong>Next Steps After Project Creation</strong>
+                  <ul class="mb-0">
+                    <li>Create BIM Execution Plan (BEP) for this project</li>
+                    <li>Generate RACI Matrix for responsibility assignment</li>
+                    <li>Develop Task Information Delivery Plan (TIDP)</li>
+                    <li>Create Mobilisation Plan if in mobilisation phase</li>
+                    <li>Set up Common Data Environment (CDE) workspace</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Submit Section -->
+        <section class="report-section">
+          <div class="section-content">
+            <div class="flex flex-center flex-gap-md">
+              <button type="submit" class="btn btn--primary btn--large">Create Project</button>
+              <button type="reset" class="btn btn--secondary">Reset Form</button>
+              <a href="../../index.html" class="btn btn--secondary">Cancel</a>
+            </div>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <script src="../../assets/js/dashboard.js"></script>
+  <script>
+    // Update ISO preview as user types
+    function updateISOPreview() {
+      const project = document.getElementById('isoProject').value || 'XXXXX';
+      const originator = document.getElementById('isoOriginator').value || 'BPG';
+
+      const isoNumber = `${project}-${originator}-XX-XX-T-O-0001`;
+      document.getElementById('isoPreview').textContent = isoNumber;
+    }
+
+    document.getElementById('isoProject').addEventListener('input', updateISOPreview);
+    document.getElementById('isoOriginator').addEventListener('input', updateISOPreview);
+
+    // Form submission
+    document.getElementById('projectSetupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (!FormUtils.validateRequired(this)) {
+        Notifications.show('Please fill in all required fields', 'warning');
+        return;
+      }
+
+      const formData = FormUtils.getFormData(this);
+
+      // Generate ISO number
+      const isoNumber = `${formData.isoProject}-${formData.isoOriginator}-XX-XX-T-O-0001`;
+
+      const project = {
+        ...formData,
+        isoNumber: isoNumber,
+        status: 'Active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Save to database
+      BaileyDB.saveProject(project);
+
+      Notifications.show('Project created successfully!', 'success');
+
+      // Redirect to project list after short delay
+      setTimeout(() => {
+        window.location.href = 'project-list.html';
+      }, 1500);
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      updateISOPreview();
+    });
+  </script>
+</body>
+</html>

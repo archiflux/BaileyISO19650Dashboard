@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export/Import Data - Bailey Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+  <header class="metadata-bar">
+    <div class="metadata-bar__inner">
+      <div class="metadata-item">
+        <span class="metadata-label">Tool</span>
+        <span class="metadata-value">Data Management</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <nav class="nav-sidebar">
+      <div class="nav-logo">
+        <h1><a href="../../index.html" style="color: inherit;">ISO19650 Dashboard</a></h1>
+        <p style="font-size: 0.75rem; color: #666;">Export & Import Data</p>
+      </div>
+      <div class="nav-section">
+        <a href="#1.0" class="nav-link nav-link--section">1.0 Export Data</a>
+      </div>
+      <div class="nav-section">
+        <a href="#2.0" class="nav-link nav-link--section">2.0 Import Data</a>
+      </div>
+      <div class="nav-section">
+        <a href="../../index.html" class="nav-link nav-link--subsection">← Back to Dashboard</a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <!-- Section 1.0: Export Data -->
+      <section id="1.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">1.0</span>
+          <h2 class="section-title">Export Data</h2>
+        </div>
+        <div class="section-content">
+          <div class="insight-box insight-box--highlight">
+            <div class="insight-box__icon">💾</div>
+            <div class="insight-box__content">
+              <strong>Backup Your Data</strong>
+              <p>Export all your projects, templates, and RACI matrices to a JSON file. This is useful for:</p>
+              <ul class="mb-0">
+                <li>Backing up your data</li>
+                <li>Transferring data between devices or browsers</li>
+                <li>Archiving completed projects</li>
+                <li>Sharing data with colleagues</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="widget widget--full mt-lg">
+            <div class="widget__header">
+              <h3 class="widget__title">Current Data Summary</h3>
+            </div>
+            <div class="widget__body">
+              <div class="metric-row">
+                <div class="metric-card">
+                  <span class="metric-card__value" id="projectsCount">0</span>
+                  <span class="metric-card__label">Projects</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-card__value" id="templatesCount">0</span>
+                  <span class="metric-card__label">Templates</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-card__value" id="raciCount">0</span>
+                  <span class="metric-card__label">RACI Matrices</span>
+                </div>
+              </div>
+
+              <div class="text-center mt-lg">
+                <button id="exportBtn" class="btn btn--primary btn--large">
+                  📥 Export All Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2.0: Import Data -->
+      <section id="2.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">2.0</span>
+          <h2 class="section-title">Import Data</h2>
+        </div>
+        <div class="section-content">
+          <div class="insight-box insight-box--warning">
+            <div class="insight-box__icon">⚠️</div>
+            <div class="insight-box__content">
+              <strong>Important Warning</strong>
+              <p>Importing data will <strong>replace all existing data</strong> in the dashboard. Make sure to export your current data first if you want to keep it.</p>
+            </div>
+          </div>
+
+          <div class="widget widget--full mt-lg">
+            <div class="widget__header">
+              <h3 class="widget__title">Import from File</h3>
+            </div>
+            <div class="widget__body">
+              <div class="form-group">
+                <label class="form-label" for="importFile">Select JSON file to import</label>
+                <input type="file" id="importFile" accept=".json" class="form-input">
+              </div>
+
+              <div class="text-center mt-lg">
+                <button id="importBtn" class="btn btn--accent btn--large" disabled>
+                  📤 Import Data
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection mt-xl">
+            <div class="subsection-header">
+              <span class="subsection-number">2.1</span>
+              <h3 class="subsection-title">Clear All Data</h3>
+            </div>
+
+            <div class="insight-box insight-box--danger">
+              <div class="insight-box__icon">🗑️</div>
+              <div class="insight-box__content">
+                <strong>Danger Zone</strong>
+                <p>This will permanently delete all projects, templates, and RACI matrices from the dashboard. This action cannot be undone.</p>
+                <div class="mt-md">
+                  <button id="clearAllBtn" class="btn btn--danger">
+                    Clear All Data
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3.0: Data Storage Info -->
+      <section class="report-section">
+        <div class="section-band">
+          <span class="section-number">3.0</span>
+          <h2 class="section-title">Data Storage Information</h2>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <div class="card__title">How Your Data is Stored</div>
+            <div class="card__content">
+              <p>This dashboard uses <strong>browser local storage</strong> to save your data. This means:</p>
+              <ul>
+                <li><strong>Privacy:</strong> Your data never leaves your computer - it's stored locally in your browser</li>
+                <li><strong>No account needed:</strong> No login or registration required</li>
+                <li><strong>Browser-specific:</strong> Data is tied to the specific browser you're using (Chrome, Firefox, etc.)</li>
+                <li><strong>Device-specific:</strong> Data won't sync between different devices or browsers</li>
+                <li><strong>Persistent:</strong> Data remains even after closing the browser (unless you clear browser data)</li>
+              </ul>
+
+              <p class="mt-md"><strong>Important:</strong> Regular exports are recommended to:</p>
+              <ul>
+                <li>Backup your work</li>
+                <li>Transfer data to another device or browser</li>
+                <li>Share data with colleagues</li>
+                <li>Protect against browser data clearing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../assets/js/dashboard.js"></script>
+  <script>
+    // Update counts
+    function updateCounts() {
+      const projects = BaileyDB.getProjects();
+      const templates = BaileyDB.getTemplates();
+      const raciMatrices = BaileyDB.getRACIMatrices();
+
+      document.getElementById('projectsCount').textContent = projects.length;
+      document.getElementById('templatesCount').textContent = templates.length;
+      document.getElementById('raciCount').textContent = raciMatrices.length;
+    }
+
+    // Export data
+    document.getElementById('exportBtn').addEventListener('click', function() {
+      const data = BaileyDB.exportData();
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const date = new Date().toISOString().split('T')[0];
+      a.href = url;
+      a.download = `BaileyPartnership_ISO19650_Data_${date}.json`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      Notifications.show('Data exported successfully!', 'success');
+    });
+
+    // File selection
+    document.getElementById('importFile').addEventListener('change', function(e) {
+      const importBtn = document.getElementById('importBtn');
+      importBtn.disabled = !e.target.files.length;
+    });
+
+    // Import data
+    document.getElementById('importBtn').addEventListener('click', function() {
+      const fileInput = document.getElementById('importFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        Notifications.show('Please select a file to import', 'warning');
+        return;
+      }
+
+      if (!confirm('This will replace all existing data. Are you sure you want to continue?')) {
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+
+          // Validate data structure
+          if (!data.projects && !data.templates && !data.raciMatrices) {
+            throw new Error('Invalid data format');
+          }
+
+          // Import data
+          BaileyDB.importData(data);
+
+          Notifications.show('Data imported successfully!', 'success');
+          updateCounts();
+          fileInput.value = '';
+          document.getElementById('importBtn').disabled = true;
+
+          // Reload page after short delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+
+        } catch (error) {
+          console.error('Import error:', error);
+          Notifications.show('Error importing data. Please check the file format.', 'danger');
+        }
+      };
+
+      reader.onerror = function() {
+        Notifications.show('Error reading file', 'danger');
+      };
+
+      reader.readAsText(file);
+    });
+
+    // Clear all data
+    document.getElementById('clearAllBtn').addEventListener('click', function() {
+      const confirmation = prompt('This will delete ALL data. Type "DELETE" to confirm:');
+
+      if (confirmation === 'DELETE') {
+        localStorage.removeItem('bailey_projects');
+        localStorage.removeItem('bailey_templates');
+        localStorage.removeItem('bailey_raci_matrices');
+
+        BaileyDB.init();
+
+        Notifications.show('All data cleared', 'success');
+        updateCounts();
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else if (confirmation !== null) {
+        Notifications.show('Incorrect confirmation. Data not deleted.', 'warning');
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCounts();
+    });
+  </script>
+</body>
+</html>
