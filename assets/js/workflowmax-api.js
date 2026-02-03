@@ -13,7 +13,7 @@ const WorkflowMaxAPI = {
     authEndpoint: 'https://login.xero.com/identity/connect/authorize',
     tokenEndpoint: 'https://identity.xero.com/connect/token',
     apiBase: 'https://api.xero.com/workflowmax/3.0',
-    scope: 'workflowmax offline_access', // Read-only scope
+    scope: 'offline_access openid profile email', // Basic scopes, WorkflowMax auto-granted if available
   },
 
   /**
