@@ -77,7 +77,7 @@ exports.handler = async (event, context) => {
     }
 
     // Build the full WorkflowMax API URL
-    const apiUrl = `https://api.xero.com/workflowmax/3.0${endpoint}`;
+    const apiUrl = `https://api.workflowmax.com${endpoint}`;
 
     // Make request to WorkflowMax API
     const response = await httpsRequest(apiUrl, {

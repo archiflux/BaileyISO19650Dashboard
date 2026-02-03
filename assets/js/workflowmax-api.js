@@ -15,7 +15,7 @@ const WorkflowMaxAPI = {
     tokenProxy: '/.netlify/functions/token-exchange', // Serverless function to avoid CORS
     apiProxy: '/.netlify/functions/workflowmax-proxy', // Serverless function to proxy API calls
     useProxy: true, // Use proxy by default to avoid CORS issues
-    apiBase: 'https://api.xero.com/workflowmax/3.0',
+    apiBase: 'https://api.workflowmax.com',
     scope: 'offline_access openid profile email', // Basic scopes, WorkflowMax auto-granted if available
   },
 
@@ -275,7 +275,7 @@ const WorkflowMaxAPI = {
     if (options.to) params.append('to', options.to);
 
     const query = params.toString() ? `?${params.toString()}` : '';
-    return await this.apiRequest(`/job.api/list${query}`);
+    return await this.apiRequest(`/v2/jobs${query}`);
   },
 
   /**
@@ -283,7 +283,7 @@ const WorkflowMaxAPI = {
    * READ-ONLY
    */
   async getJob(jobId) {
-    return await this.apiRequest(`/job.api/get/${jobId}`);
+    return await this.apiRequest(`/v2/jobs/${jobId}`);
   },
 
   /**
