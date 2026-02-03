@@ -104,9 +104,9 @@ exports.handler = async (event, context) => {
       tokenRequestBody.append('refresh_token', refresh_token);
     }
 
-    // Exchange code/refresh token for access token with Xero
+    // Exchange code/refresh token for access token with WorkflowMax
     const postData = tokenRequestBody.toString();
-    const tokenResponse = await httpsRequest('https://identity.xero.com/connect/token', {
+    const tokenResponse = await httpsRequest('https://oauth.workflowmax.com/oauth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

@@ -10,13 +10,13 @@ const WorkflowMaxAPI = {
   config: {
     clientId: '', // Will be set by user after creating the app
     redirectUri: window.location.origin + '/oauth-callback.html',
-    authEndpoint: 'https://login.xero.com/identity/connect/authorize',
-    tokenEndpoint: 'https://identity.xero.com/connect/token',
+    authEndpoint: 'https://oauth.workflowmax.com/oauth/authorize',
+    tokenEndpoint: 'https://oauth.workflowmax.com/oauth/token',
     tokenProxy: '/.netlify/functions/token-exchange', // Serverless function to avoid CORS
     apiProxy: '/.netlify/functions/workflowmax-proxy', // Serverless function to proxy API calls
     useProxy: true, // Use proxy by default to avoid CORS issues
     apiBase: 'https://api.workflowmax.com',
-    scope: 'offline_access openid profile email', // Basic scopes, WorkflowMax auto-granted if available
+    scope: 'openid profile email workflowmax offline_access', // WorkflowMax requires explicit workflowmax scope
   },
 
   /**
