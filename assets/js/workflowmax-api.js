@@ -13,6 +13,7 @@ const WorkflowMaxAPI = {
     authEndpoint: 'https://login.xero.com/identity/connect/authorize',
     tokenEndpoint: 'https://identity.xero.com/connect/token',
     tokenProxy: '/.netlify/functions/token-exchange', // Serverless function to avoid CORS
+    apiProxy: '/.netlify/functions/workflowmax-proxy', // Serverless function to proxy API calls
     useProxy: true, // Use proxy by default to avoid CORS issues
     apiBase: 'https://api.xero.com/workflowmax/3.0',
     scope: 'offline_access openid profile email', // Basic scopes, WorkflowMax auto-granted if available
@@ -228,7 +229,10 @@ const WorkflowMaxAPI = {
       throw new Error('Only GET requests are allowed. This integration is read-only.');
     }
 
-    const url = `${this.config.apiBase}${endpoint}`;
+    // Use proxy to avoid CORS issues
+    const url = this.config.useProxy
+      ? `${this.config.apiProxy}?endpoint=${encodeURIComponent(endpoint)}`
+      : `${this.config.apiBase}${endpoint}`;
 
     try {
       const response = await fetch(url, {
