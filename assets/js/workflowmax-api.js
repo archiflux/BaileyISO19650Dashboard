@@ -9,7 +9,7 @@ const WorkflowMaxAPI = {
   // Configuration
   config: {
     clientId: '', // Will be set by user after creating the app
-    redirectUri: window.location.origin + '/BaileyISO19650Dashboard/oauth-callback.html',
+    redirectUri: window.location.origin + '/oauth-callback.html',
     authEndpoint: 'https://login.xero.com/identity/connect/authorize',
     tokenEndpoint: 'https://identity.xero.com/connect/token',
     tokenProxy: '/.netlify/functions/token-exchange', // Serverless function to avoid CORS
