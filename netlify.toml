@@ -4,13 +4,7 @@
   publish = "."
   functions = "netlify/functions"
 
-# Redirect rules (none needed for now)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
-  conditions = {Role = ["admin"]}
+# Redirect rules (none needed for static site)
 
 # Headers for security
 [[headers]]
