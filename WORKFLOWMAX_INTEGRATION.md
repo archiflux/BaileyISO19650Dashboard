@@ -74,10 +74,12 @@ All your custom fields are preserved including:
 
 | Field | Value |
 |-------|-------|
-| **App Name** | `BP ISO19650 Dashboard` |
+| **App Name** | `BP ISO Dashboard` |
 | **Company/Application URL** | `https://archiflux.github.io/BaileyISO19650Dashboard` |
 | **Redirect URI** | `https://archiflux.github.io/BaileyISO19650Dashboard/oauth-callback.html` |
 | **Scopes** | `workflowmax` (Read-only access) |
+
+**Note:** App Name must be 20 characters or less. "BP ISO Dashboard" is 17 characters.
 
 5. Click **"Save"** or **"Create"**
 6. WorkflowMax will display your **Client ID** and **Client Secret**

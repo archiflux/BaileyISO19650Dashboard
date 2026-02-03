@@ -13,7 +13,7 @@ Your ISO19650 Dashboard now has **read-only WorkflowMax integration** to automat
 3. Fill in these exact values:
 
 ```
-App Name: BP ISO19650 Dashboard
+App Name: BP ISO Dashboard
 
 Company URL: https://archiflux.github.io/BaileyISO19650Dashboard
 
@@ -21,6 +21,8 @@ Redirect URI: https://archiflux.github.io/BaileyISO19650Dashboard/oauth-callback
 
 Scopes: workflowmax
 ```
+
+> **Note:** App Name must be 20 characters or less. "BP ISO Dashboard" = 17 chars ✓
 
 4. Click **Save**
 5. **Copy the Client ID** (you'll need this)

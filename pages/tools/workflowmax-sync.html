@@ -225,7 +225,8 @@
 
     // Set the redirect URI
     document.addEventListener('DOMContentLoaded', function() {
-      const redirectUri = window.location.origin + window.location.pathname.replace('workflowmax-sync.html', '') + '../../oauth-callback.html';
+      // Calculate correct redirect URI
+      const redirectUri = window.location.origin + '/BaileyISO19650Dashboard/oauth-callback.html';
       document.getElementById('redirectUri').textContent = redirectUri;
 
       // Check if we're returning from OAuth
