@@ -7,6 +7,23 @@
  * Security: Read-only, doesn't store tokens, validates requests
  */
 
+const https = require('https');
+
+function httpsRequest(url, options, postData) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        resolve({ statusCode: res.statusCode, body: data, headers: res.headers });
+      });
+    });
+    req.on('error', reject);
+    if (postData) req.write(postData);
+    req.end();
+  });
+}
+
 exports.handler = async (event, context) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
@@ -88,20 +105,21 @@ exports.handler = async (event, context) => {
     }
 
     // Exchange code/refresh token for access token with Xero
-    const tokenResponse = await fetch('https://identity.xero.com/connect/token', {
+    const postData = tokenRequestBody.toString();
+    const tokenResponse = await httpsRequest('https://identity.xero.com/connect/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: tokenRequestBody.toString()
-    });
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    }, postData);
 
-    const tokenData = await tokenResponse.json();
+    const tokenData = JSON.parse(tokenResponse.body);
 
-    if (!tokenResponse.ok) {
+    if (tokenResponse.statusCode !== 200) {
       console.error('Token exchange failed:', tokenData);
       return {
-        statusCode: tokenResponse.status,
+        statusCode: tokenResponse.statusCode,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
