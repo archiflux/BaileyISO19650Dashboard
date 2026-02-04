@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bailey Partnership Group Limited - ISO19650 Information Management Dashboard">
+  <title>Bailey Partnership ISO19650 Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Metadata Bar -->
+  <header class="metadata-bar">
+    <div class="metadata-bar__inner">
+      <div class="metadata-item">
+        <span class="metadata-label">Organisation</span>
+        <span class="metadata-value">Bailey Partnership Group Limited</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Framework</span>
+        <span class="metadata-value">BS EN ISO 19650</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Version</span>
+        <span class="metadata-value">1.0</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Last Updated</span>
+        <span class="metadata-value">February 2025</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Status</span>
+        <span class="metadata-badge metadata-badge--draft">In Development</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar">
+      <div class="nav-logo">
+        <h1>ISO19650 Dashboard</h1>
+        <p style="font-size: 0.75rem; color: #666;">Information Management Framework</p>
+      </div>
+
+      <div class="nav-section">
+        <a href="#1.0" class="nav-link nav-link--section active">1.0 Dashboard Home</a>
+      </div>
+
+      <div class="nav-section">
+        <a href="#2.0" class="nav-link nav-link--section">2.0 Policies & Governance</a>
+        <a href="pages/policies/information-management-policy.html" class="nav-link nav-link--subsection">2.1 Information Management Policy</a>
+        <a href="pages/policies/capability-capacity-policy.html" class="nav-link nav-link--subsection">2.2 Capability & Capacity Policy</a>
+        <a href="pages/policies/quality-assurance.html" class="nav-link nav-link--subsection">2.3 Quality Assurance</a>
+      </div>
+
+      <div class="nav-section">
+        <a href="#3.0" class="nav-link nav-link--section">3.0 Project Management</a>
+        <a href="pages/tools/workflowmax-sync.html" class="nav-link nav-link--subsection">3.1 WorkflowMax Sync</a>
+        <a href="pages/tools/project-setup.html" class="nav-link nav-link--subsection">3.2 New Project Setup</a>
+        <a href="pages/tools/project-list.html" class="nav-link nav-link--subsection">3.3 Active Projects</a>
+        <a href="pages/tools/bep-generator.html" class="nav-link nav-link--subsection">3.4 BEP Generator</a>
+      </div>
+
+      <div class="nav-section">
+        <a href="#4.0" class="nav-link nav-link--section">4.0 Templates & Tools</a>
+        <a href="pages/templates/mobilisation-plan.html" class="nav-link nav-link--subsection">4.1 Mobilisation Plan</a>
+        <a href="pages/templates/capability-assessment.html" class="nav-link nav-link--subsection">4.2 Capability Assessment</a>
+        <a href="pages/tools/raci-matrix.html" class="nav-link nav-link--subsection">4.3 RACI Matrix Generator</a>
+        <a href="pages/tools/naming-convention.html" class="nav-link nav-link--subsection">4.4 Naming Convention Tool</a>
+      </div>
+
+      <div class="nav-section">
+        <a href="#5.0" class="nav-link nav-link--section">5.0 Guidance & Resources</a>
+        <a href="pages/guidance/appointed-party-guidance.html" class="nav-link nav-link--subsection">5.1 Appointed Party Guidance</a>
+        <a href="pages/guidance/cde-workflows.html" class="nav-link nav-link--subsection">5.2 CDE Workflows</a>
+        <a href="pages/guidance/standards-reference.html" class="nav-link nav-link--subsection">5.3 Standards Reference</a>
+      </div>
+
+      <div class="nav-section">
+        <a href="#6.0" class="nav-link nav-link--section">6.0 Data & Reports</a>
+        <a href="pages/tools/export-import.html" class="nav-link nav-link--subsection">6.1 Export/Import Data</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Section 1.0: Dashboard Overview -->
+      <section id="1.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">1.0</span>
+          <h2 class="section-title">Dashboard Overview</h2>
+        </div>
+        <div class="section-content">
+          <!-- Welcome Message -->
+          <div class="insight-box insight-box--highlight">
+            <div class="insight-box__icon">👋</div>
+            <div class="insight-box__content">
+              <strong>Welcome to the Bailey Partnership ISO19650 Dashboard</strong>
+              <p>This dashboard provides centralized access to all information management policies, templates, tools, and resources required for BS EN ISO 19650 compliance. Use the navigation menu to access specific sections.</p>
+            </div>
+          </div>
+
+          <!-- Key Metrics -->
+          <div class="metric-row">
+            <div class="metric-card metric-card--success">
+              <span class="metric-card__value" id="activeProjectsCount">0</span>
+              <span class="metric-card__label">Active Projects</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-card__value" id="templatesCount">0</span>
+              <span class="metric-card__label">Saved Templates</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-card__value" id="raciMatricesCount">0</span>
+              <span class="metric-card__label">RACI Matrices</span>
+            </div>
+            <div class="metric-card metric-card--accent">
+              <span class="metric-card__value">ISO 19650</span>
+              <span class="metric-card__label">Framework</span>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div id="2.0" class="subsection">
+            <div class="subsection-header">
+              <span class="subsection-number">1.1</span>
+              <h3 class="subsection-title">Quick Actions</h3>
+            </div>
+
+            <div class="widget-grid widget-grid--3col">
+              <!-- WorkflowMax Sync -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">🔗 Sync from WorkflowMax</h3>
+                </div>
+                <div class="widget__body">
+                  <p class="text-muted mb-md">Import projects automatically from WorkflowMax (read-only).</p>
+                  <a href="pages/tools/workflowmax-sync.html" class="btn btn--accent" style="width: 100%;">Connect WorkflowMax</a>
+                </div>
+              </div>
+
+              <!-- New Project -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">🚀 Start New Project</h3>
+                </div>
+                <div class="widget__body">
+                  <p class="text-muted mb-md">Set up a new project with ISO19650 compliance requirements.</p>
+                  <a href="pages/tools/project-setup.html" class="btn btn--primary" style="width: 100%;">Create Project</a>
+                </div>
+              </div>
+
+              <!-- Generate RACI Matrix -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">📊 Generate RACI Matrix</h3>
+                </div>
+                <div class="widget__body">
+                  <p class="text-muted mb-md">Create responsibility assignment matrix for your project.</p>
+                  <a href="pages/tools/raci-matrix.html" class="btn btn--primary" style="width: 100%;">Create RACI Matrix</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="widget-grid widget-grid--3col mt-lg">
+              <!-- Create BEP -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">📋 BEP Generator</h3>
+                </div>
+                <div class="widget__body">
+                  <p class="text-muted mb-md">Generate BIM Execution Plan for your project.</p>
+                  <a href="pages/tools/bep-generator.html" class="btn btn--primary" style="width: 100%;">Generate BEP</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ISO19650 Key Requirements -->
+          <div id="1.2" class="subsection">
+            <div class="subsection-header">
+              <span class="subsection-number">1.2</span>
+              <h3 class="subsection-title">ISO19650 Key Requirements</h3>
+            </div>
+
+            <div class="widget-grid widget-grid--2col">
+              <!-- Part 1: Concepts & Principles -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">ISO 19650-1: Concepts & Principles</h3>
+                </div>
+                <div class="widget__body">
+                  <ul>
+                    <li>Information management according to ISO 19650</li>
+                    <li>Common Data Environment (CDE) workflows</li>
+                    <li>Information container management</li>
+                    <li>Levels of information need</li>
+                    <li>Collaborative working principles</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Part 2: Delivery Phase -->
+              <div class="widget">
+                <div class="widget__header">
+                  <h3 class="widget__title">ISO 19650-2: Delivery Phase</h3>
+                </div>
+                <div class="widget__body">
+                  <ul>
+                    <li>BIM Execution Plan (BEP) development</li>
+                    <li>Task Information Delivery Plan (TIDP)</li>
+                    <li>Master Information Delivery Plan (MIDP)</li>
+                    <li>Information delivery milestones</li>
+                    <li>Project close-out procedures</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Lifecycle Phases -->
+          <div id="1.3" class="subsection">
+            <div class="subsection-header">
+              <span class="subsection-number">1.3</span>
+              <h3 class="subsection-title">Project Lifecycle Phases</h3>
+            </div>
+
+            <div class="widget widget--full">
+              <div class="widget__header">
+                <h3 class="widget__title">ISO19650-2 Project Phases</h3>
+              </div>
+              <div class="widget__body widget__body--no-padding">
+                <div class="data-table-wrapper">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Phase</th>
+                        <th>ISO Clause</th>
+                        <th>Key Activities</th>
+                        <th>Deliverables</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Tender Response</strong></td>
+                        <td>5.3</td>
+                        <td>Assess capability & capacity, contribute to pre-appointment BEP</td>
+                        <td>Capability assessment, Resource plan</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Appointment</strong></td>
+                        <td>5.4</td>
+                        <td>Confirm BEP, establish TIDP, define responsibility matrix</td>
+                        <td>Confirmed BEP, TIDP, RACI matrix</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Mobilisation</strong></td>
+                        <td>5.5</td>
+                        <td>Mobilize resources, test IT systems, establish CDE</td>
+                        <td>Mobilisation plan, CDE setup</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Collaborative Production</strong></td>
+                        <td>5.6</td>
+                        <td>Generate information, QA checks, information reviews</td>
+                        <td>Information containers, reviewed models</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Information Model Delivery</strong></td>
+                        <td>5.7</td>
+                        <td>Submit for authorization and acceptance</td>
+                        <td>Authorized information model</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Project Close-out</strong></td>
+                        <td>5.8</td>
+                        <td>Archive information, capture lessons learned</td>
+                        <td>Archived project, Lessons learned</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Important Notes -->
+          <div id="1.4" class="subsection">
+            <div class="subsection-header">
+              <span class="subsection-number">1.4</span>
+              <h3 class="subsection-title">Important Notes</h3>
+            </div>
+
+            <div class="insight-box insight-box--recommendation">
+              <div class="insight-box__icon">📌</div>
+              <div class="insight-box__content">
+                <div class="insight-box__priority">[Strategic Direction]</div>
+                <strong>Future of ISO 19650</strong>
+                <p>The current BS EN ISO 19650 standards are expected to become obsolete within 3-5 years, to be replaced by the Information Management Initiative (IMI) - a more coherent and simplified approach.</p>
+                <p><strong>Bailey Partnership Strategy:</strong> Focus on internal implementation and capability building while monitoring the transition to IMI.</p>
+              </div>
+            </div>
+
+            <div class="insight-box insight-box--success">
+              <div class="insight-box__icon">✅</div>
+              <div class="insight-box__content">
+                <strong>What This Dashboard Provides</strong>
+                <ul>
+                  <li>Centralized policy and template repository</li>
+                  <li>Project tracking and management tools</li>
+                  <li>RACI matrix generation for clear responsibility assignment</li>
+                  <li>BEP and mobilisation plan templates</li>
+                  <li>ISO19650 naming convention enforcement</li>
+                  <li>Document version control and status tracking</li>
+                  <li>Capability and capacity assessment tools</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2.0: Getting Started -->
+      <section id="2.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">2.0</span>
+          <h2 class="section-title">Getting Started</h2>
+        </div>
+        <div class="section-content">
+          <div class="subsection-header">
+            <span class="subsection-number">2.1</span>
+            <h3 class="subsection-title">How to Use This Dashboard</h3>
+          </div>
+
+          <div class="widget-grid widget-grid--2col">
+            <!-- For Project Teams -->
+            <div class="card">
+              <div class="card__title">👥 For Project Teams</div>
+              <div class="card__content">
+                <ol>
+                  <li><strong>Review Policies:</strong> Start with Section 2.0 to understand our information management policies</li>
+                  <li><strong>Set Up Project:</strong> Use Section 3.0 to create a new project with ISO19650 number</li>
+                  <li><strong>Generate Documents:</strong> Create BEP, RACI matrix, and mobilisation plan using Section 4.0 tools</li>
+                  <li><strong>Track Progress:</strong> Monitor project status and update templates as the project evolves</li>
+                  <li><strong>Close Out:</strong> Archive information and capture lessons learned</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- For Management -->
+            <div class="card">
+              <div class="card__title">👔 For Management & Directors</div>
+              <div class="card__content">
+                <ol>
+                  <li><strong>Policy Review:</strong> Review and approve information management policies in Section 2.0</li>
+                  <li><strong>Monitor Compliance:</strong> Track project compliance through the dashboard metrics</li>
+                  <li><strong>Resource Planning:</strong> Use capability assessments for resource allocation</li>
+                  <li><strong>Quality Oversight:</strong> Review QA processes and lessons learned</li>
+                  <li><strong>Strategic Decisions:</strong> Use data exports for reporting and strategic planning</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Resources -->
+          <div class="subsection mt-xl">
+            <div class="subsection-header">
+              <span class="subsection-number">2.2</span>
+              <h3 class="subsection-title">Key Resources</h3>
+            </div>
+
+            <div class="widget widget--full">
+              <div class="widget__body">
+                <div class="widget-grid widget-grid--2col">
+                  <div>
+                    <h4 class="mb-md">Internal Resources</h4>
+                    <ul>
+                      <li><a href="pages/policies/information-management-policy.html">Information Management Policy</a></li>
+                      <li><a href="pages/policies/capability-capacity-policy.html">Capability & Capacity Policy</a></li>
+                      <li><a href="pages/guidance/appointed-party-guidance.html">Appointed Party Guidance</a></li>
+                      <li><a href="pages/tools/raci-matrix.html">RACI Matrix Templates</a></li>
+                      <li><a href="pages/templates/mobilisation-plan.html">Mobilisation Plan Template</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="mb-md">External Standards & References</h4>
+                    <ul>
+                      <li><a href="https://www.iso.org/standard/68078.html" target="_blank">ISO 19650-1:2018</a> - Concepts and principles</li>
+                      <li><a href="https://www.iso.org/standard/68080.html" target="_blank">ISO 19650-2:2018</a> - Delivery phase</li>
+                      <li><a href="https://www.ukbimframework.org/" target="_blank">UK BIM Framework</a></li>
+                      <li><a href="https://www.bsigroup.com/en-GB/products-and-services/standards/iso-19650-building-information-modelling-bim/" target="_blank">BSI ISO 19650 Guidance</a></li>
+                      <li><a href="https://www.cdbb.cam.ac.uk/" target="_blank">Centre for Digital Built Britain</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3.0: Recent Activity -->
+      <section id="3.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">3.0</span>
+          <h2 class="section-title">Recent Activity</h2>
+        </div>
+        <div class="section-content">
+          <div class="widget widget--full">
+            <div class="widget__header">
+              <h3 class="widget__title">Recent Projects & Templates</h3>
+            </div>
+            <div class="widget__body" id="recentActivityContainer">
+              <p class="text-muted text-center">No recent activity. Start by creating a new project or template.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/dashboard.js"></script>
+  <script>
+    // Update dashboard metrics
+    function updateDashboardMetrics() {
+      const projects = BaileyDB.getProjects();
+      const templates = BaileyDB.getTemplates();
+      const raciMatrices = BaileyDB.getRACIMatrices();
+
+      document.getElementById('activeProjectsCount').textContent = projects.length;
+      document.getElementById('templatesCount').textContent = templates.length;
+      document.getElementById('raciMatricesCount').textContent = raciMatrices.length;
+
+      // Update recent activity
+      updateRecentActivity(projects, templates);
+    }
+
+    function updateRecentActivity(projects, templates) {
+      const container = document.getElementById('recentActivityContainer');
+      const allItems = [
+        ...projects.map(p => ({ ...p, type: 'project' })),
+        ...templates.map(t => ({ ...t, type: 'template' }))
+      ];
+
+      // Sort by updated date
+      allItems.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      // Take top 5
+      const recent = allItems.slice(0, 5);
+
+      if (recent.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No recent activity. Start by creating a new project or template.</p>';
+        return;
+      }
+
+      const html = `
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>ISO Number</th>
+                <th>Last Updated</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${recent.map(item => `
+                <tr>
+                  <td>
+                    <span class="status-badge status-badge--${item.type === 'project' ? 'info' : 'neutral'}">
+                      ${item.type}
+                    </span>
+                  </td>
+                  <td><strong>${item.name || item.title || 'Untitled'}</strong></td>
+                  <td>${item.isoNumber || 'N/A'}</td>
+                  <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
+                  <td>
+                    <span class="status-badge status-badge--${getStatusClass(item.status)}">
+                      ${item.status || 'Draft'}
+                    </span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function getStatusClass(status) {
+      if (!status) return 'neutral';
+      const s = status.toLowerCase();
+      if (s.includes('active') || s.includes('approved')) return 'success';
+      if (s.includes('draft') || s.includes('wip')) return 'warning';
+      if (s.includes('archived')) return 'neutral';
+      return 'info';
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDashboardMetrics();
+    });
+  </script>
+</body>
+</html>

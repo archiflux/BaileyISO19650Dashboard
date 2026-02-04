@@ -1,0 +1,25 @@
+# GitHub Pages Configuration
+# Bailey Partnership Group Limited - ISO19650 Dashboard
+
+title: "Bailey Partnership ISO19650 Dashboard"
+description: "Information Management Dashboard for ISO19650 Compliance"
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+theme: null
+
+# Exclude from processing
+exclude:
+  - OriginalDocs/
+  - README.md
+  - .gitignore
+  - node_modules/
+  - vendor/
+
+# Include
+include:
+  - assets/
+  - pages/
+  - data/

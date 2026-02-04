@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RACI Matrix Generator - Bailey Partnership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+  <header class="metadata-bar">
+    <div class="metadata-bar__inner">
+      <div class="metadata-item">
+        <span class="metadata-label">Tool</span>
+        <span class="metadata-value">RACI Matrix Generator</span>
+      </div>
+      <div class="metadata-item">
+        <span class="metadata-label">Standard</span>
+        <span class="metadata-value">BS EN ISO 19650-2</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <nav class="nav-sidebar">
+      <div class="nav-logo">
+        <h1><a href="../../index.html" style="color: inherit;">ISO19650 Dashboard</a></h1>
+        <p style="font-size: 0.75rem; color: #666;">RACI Matrix Generator</p>
+      </div>
+      <div class="nav-section">
+        <a href="#1.0" class="nav-link nav-link--section">1.0 New Matrix</a>
+      </div>
+      <div class="nav-section">
+        <a href="#2.0" class="nav-link nav-link--section">2.0 Saved Matrices</a>
+      </div>
+      <div class="nav-section">
+        <a href="../../index.html" class="nav-link nav-link--subsection">← Back to Dashboard</a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <!-- Section 1.0: Create RACI Matrix -->
+      <section id="1.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">1.0</span>
+          <h2 class="section-title">Create New RACI Matrix</h2>
+        </div>
+        <div class="section-content">
+          <div class="insight-box insight-box--highlight">
+            <div class="insight-box__icon">ℹ️</div>
+            <div class="insight-box__content">
+              <strong>RACI Matrix Explained</strong>
+              <p><strong>R</strong>esponsible - Person who performs the task<br>
+              <strong>A</strong>ccountable - Person ultimately answerable for the task<br>
+              <strong>C</strong>onsulted - People who provide input<br>
+              <strong>I</strong>nformed - People kept up to date on progress</p>
+            </div>
+          </div>
+
+          <form id="raciSetupForm" class="mt-lg">
+            <div class="widget-grid widget-grid--2col">
+              <div class="form-group">
+                <label class="form-label" for="projectName">Project Name *</label>
+                <input type="text" id="projectName" name="projectName" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectISONumber">Project ISO19650 Number *</label>
+                <input type="text" id="projectISONumber" name="projectISONumber" class="form-input" placeholder="XXXXX-BPG-XX-XX-..." required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="matrixType">Matrix Type *</label>
+                <select id="matrixType" name="matrixType" class="form-select" required>
+                  <option value="">Select matrix type...</option>
+                  <option value="lead_appointed">Main Contractor (Lead Appointed Party)</option>
+                  <option value="appointed">Subcontractor (Appointed Party)</option>
+                  <option value="custom">Custom Matrix</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectPhase">Project Phase *</label>
+                <select id="projectPhase" name="projectPhase" class="form-select" required>
+                  <option value="">Select phase...</option>
+                  <option value="tender">Tender Response (5.3)</option>
+                  <option value="appointment">Appointment (5.4)</option>
+                  <option value="mobilisation">Mobilisation (5.5)</option>
+                  <option value="production">Collaborative Production (5.6)</option>
+                  <option value="delivery">Information Model Delivery (5.7)</option>
+                  <option value="closeout">Project Close-out (5.8)</option>
+                  <option value="all">All Phases</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-lg text-center">
+              <button type="submit" class="btn btn--primary btn--large">Generate RACI Matrix</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Section 2.0: Generated Matrix (Hidden initially) -->
+      <section id="matrixSection" class="report-section hidden">
+        <div class="section-band">
+          <span class="section-number">2.0</span>
+          <h2 class="section-title">RACI Matrix</h2>
+        </div>
+        <div class="section-content">
+          <div id="matrixContainer"></div>
+
+          <div class="mt-lg flex flex-center flex-gap-md">
+            <button id="saveMatrixBtn" class="btn btn--accent">Save Matrix</button>
+            <button id="exportMatrixBtn" class="btn btn--secondary">Export as CSV</button>
+            <button id="printMatrixBtn" class="btn btn--secondary" onclick="window.print()">Print Matrix</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3.0: Saved Matrices -->
+      <section id="2.0" class="report-section">
+        <div class="section-band">
+          <span class="section-number">3.0</span>
+          <h2 class="section-title">Saved RACI Matrices</h2>
+        </div>
+        <div class="section-content">
+          <div id="savedMatricesContainer">
+            <p class="text-muted text-center">No saved matrices yet. Create your first matrix above.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../assets/js/dashboard.js"></script>
+  <script>
+    // RACI Matrix Templates based on ISO 19650-2
+    const RACITemplates = {
+      lead_appointed: {
+        roles: [
+          'Appointing Party',
+          'Lead Appointed Party',
+          'Appointed Parties',
+          'Bid Coordinator',
+          'Lead Designer',
+          'Project Manager',
+          'Quantity Surveyor',
+          'CDM Principal Designer',
+          'Document Controller',
+          'BIM Manager',
+          'Task Teams'
+        ],
+        activities: {
+          appointment: [
+            { id: '5.4.1', task: 'Confirm BEP with Appointing Party', clause: '5.4', raci: { 'Appointing Party': 'A', 'Lead Appointed Party': 'R', 'BIM Manager': 'C', 'Project Manager': 'I' } },
+            { id: '5.4.2', task: 'Establish detailed responsibility matrix', clause: '5.4', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Project Manager': 'C', 'Task Teams': 'I' } },
+            { id: '5.4.3', task: 'Establish Task Information Delivery Plan (TIDP)', clause: '5.4', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Task Teams': 'C', 'Project Manager': 'I' } },
+            { id: '5.4.4', task: 'Establish Master Information Delivery Plan (MIDP)', clause: '5.4', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Appointed Parties': 'C', 'Project Manager': 'I' } },
+            { id: '5.4.5', task: 'Complete appointment documents', clause: '5.4', raci: { 'Appointing Party': 'A', 'Lead Appointed Party': 'R', 'Project Manager': 'C' } }
+          ],
+          mobilisation: [
+            { id: '5.5.1', task: 'Mobilize resources and IT systems', clause: '5.5', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Document Controller': 'R', 'Task Teams': 'C' } },
+            { id: '5.5.2', task: 'Test information production methods', clause: '5.5', raci: { 'BIM Manager': 'A', 'Task Teams': 'R', 'Lead Designer': 'C' } },
+            { id: '5.5.3', task: 'Establish Common Data Environment (CDE)', clause: '5.5', raci: { 'BIM Manager': 'A', 'Document Controller': 'R', 'Lead Appointed Party': 'I' } }
+          ],
+          production: [
+            { id: '5.6.1', task: 'Check availability of reference information', clause: '5.6', raci: { 'Task Teams': 'R', 'BIM Manager': 'A', 'Document Controller': 'C' } },
+            { id: '5.6.2', task: 'Generate information per TIDP', clause: '5.6', raci: { 'Task Teams': 'R', 'Lead Designer': 'A', 'BIM Manager': 'C' } },
+            { id: '5.6.3', task: 'Undertake quality assurance checks', clause: '5.6', raci: { 'Task Teams': 'R', 'Lead Designer': 'A', 'BIM Manager': 'C' } },
+            { id: '5.6.4', task: 'Review and approve information for sharing', clause: '5.6', raci: { 'Lead Designer': 'A', 'BIM Manager': 'R', 'Task Teams': 'C' } },
+            { id: '5.6.5', task: 'Participate in information model reviews', clause: '5.6', raci: { 'BIM Manager': 'A', 'Task Teams': 'R', 'Lead Designer': 'C', 'Appointing Party': 'I' } }
+          ],
+          delivery: [
+            { id: '5.7.1', task: 'Submit information for authorization', clause: '5.7', raci: { 'Lead Appointed Party': 'R', 'BIM Manager': 'C', 'Appointing Party': 'I' } },
+            { id: '5.7.2', task: 'Review and authorize information', clause: '5.7', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Lead Designer': 'C' } },
+            { id: '5.7.3', task: 'Submit for Appointing Party acceptance', clause: '5.7', raci: { 'Lead Appointed Party': 'R', 'Appointing Party': 'A' } },
+            { id: '5.7.4', task: 'Review and accept information model', clause: '5.7', raci: { 'Appointing Party': 'A', 'Lead Appointed Party': 'C' } }
+          ],
+          closeout: [
+            { id: '5.8.1', task: 'Archive project information', clause: '5.8', raci: { 'BIM Manager': 'A', 'Document Controller': 'R', 'Lead Appointed Party': 'I' } },
+            { id: '5.8.2', task: 'Capture lessons learned', clause: '5.8', raci: { 'Lead Appointed Party': 'A', 'BIM Manager': 'R', 'Task Teams': 'C', 'Project Manager': 'C' } }
+          ]
+        }
+      },
+      appointed: {
+        roles: [
+          'Appointing Party',
+          'Lead Appointed Party',
+          'Subcontractor',
+          'Main Contractor PM',
+          'Mechanical Engineer',
+          'Electrical Engineer',
+          'Quantity Surveyor',
+          'Document Controller',
+          'CAD Technicians',
+          'BIM Specialist',
+          'Supply Chain'
+        ],
+        activities: {
+          appointment: [
+            { id: '5.4.1', task: 'Confirm BEP requirements', clause: '5.4', raci: { 'Lead Appointed Party': 'A', 'Subcontractor': 'R', 'BIM Specialist': 'C' } },
+            { id: '5.4.2', task: 'Establish responsibility matrix', clause: '5.4', raci: { 'Subcontractor': 'A', 'BIM Specialist': 'R', 'CAD Technicians': 'I' } },
+            { id: '5.4.3', task: 'Establish TIDP for subcontractor scope', clause: '5.4', raci: { 'Subcontractor': 'A', 'BIM Specialist': 'R', 'Mechanical Engineer': 'C', 'Electrical Engineer': 'C' } }
+          ],
+          production: [
+            { id: '5.6.1', task: 'Generate MEP information models', clause: '5.6', raci: { 'Mechanical Engineer': 'R', 'Electrical Engineer': 'R', 'BIM Specialist': 'C', 'Subcontractor': 'A' } },
+            { id: '5.6.2', task: 'Coordinate with architectural model', clause: '5.6', raci: { 'BIM Specialist': 'R', 'Lead Appointed Party': 'A', 'Mechanical Engineer': 'C', 'Electrical Engineer': 'C' } },
+            { id: '5.6.3', task: 'Quality checks on MEP models', clause: '5.6', raci: { 'BIM Specialist': 'A', 'CAD Technicians': 'R', 'Mechanical Engineer': 'C', 'Electrical Engineer': 'C' } }
+          ]
+        }
+      }
+    };
+
+    // Form submission
+    document.getElementById('raciSetupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      generateMatrix();
+    });
+
+    function generateMatrix() {
+      const formData = new FormData(document.getElementById('raciSetupForm'));
+      const data = Object.fromEntries(formData.entries());
+
+      const template = RACITemplates[data.matrixType];
+      if (!template) {
+        Notifications.show('Please select a valid matrix type', 'warning');
+        return;
+      }
+
+      let activities = [];
+      if (data.projectPhase === 'all') {
+        Object.values(template.activities).forEach(phaseActivities => {
+          activities = activities.concat(phaseActivities);
+        });
+      } else {
+        const phaseKey = {
+          'appointment': 'appointment',
+          'mobilisation': 'mobilisation',
+          'production': 'production',
+          'delivery': 'delivery',
+          'closeout': 'closeout'
+        }[data.projectPhase];
+
+        activities = template.activities[phaseKey] || [];
+      }
+
+      if (activities.length === 0) {
+        Notifications.show('No activities found for selected phase', 'warning');
+        return;
+      }
+
+      renderMatrix(data, template.roles, activities);
+      document.getElementById('matrixSection').classList.remove('hidden');
+      document.getElementById('matrixSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderMatrix(projectData, roles, activities) {
+      const container = document.getElementById('matrixContainer');
+
+      let html = `
+        <div class="widget widget--full">
+          <div class="widget__header">
+            <h3 class="widget__title">${projectData.projectName} - RACI Matrix</h3>
+          </div>
+          <div class="widget__body">
+            <p class="text-muted mb-md"><strong>Project:</strong> ${projectData.projectName} | <strong>ISO Number:</strong> ${projectData.projectISONumber}</p>
+            <div class="data-table-wrapper">
+              <table class="data-table" id="raciTable">
+                <thead>
+                  <tr>
+                    <th style="min-width: 200px;">Task</th>
+                    <th style="width: 80px;">Clause</th>
+                    ${roles.map(role => `<th style="min-width: 80px; text-align: center;">${role}</th>`).join('')}
+                  </tr>
+                </thead>
+                <tbody>
+                  ${activities.map(activity => `
+                    <tr>
+                      <td><strong>${activity.task}</strong></td>
+                      <td class="text-center">${activity.clause}</td>
+                      ${roles.map(role => `
+                        <td class="text-center">
+                          <select class="form-select" style="padding: 4px; font-size: 0.875rem;" data-task="${activity.id}" data-role="${role}">
+                            <option value="">-</option>
+                            <option value="R" ${activity.raci[role] === 'R' ? 'selected' : ''}>R</option>
+                            <option value="A" ${activity.raci[role] === 'A' ? 'selected' : ''}>A</option>
+                            <option value="C" ${activity.raci[role] === 'C' ? 'selected' : ''}>C</option>
+                            <option value="I" ${activity.raci[role] === 'I' ? 'selected' : ''}>I</option>
+                          </select>
+                        </td>
+                      `).join('')}
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Store current matrix data
+      window.currentMatrix = {
+        projectData,
+        roles,
+        activities
+      };
+    }
+
+    // Save matrix
+    document.getElementById('saveMatrixBtn').addEventListener('click', function() {
+      if (!window.currentMatrix) {
+        Notifications.show('No matrix to save', 'warning');
+        return;
+      }
+
+      // Collect current RACI assignments
+      const table = document.getElementById('raciTable');
+      const selects = table.querySelectorAll('select');
+      const raciData = {};
+
+      selects.forEach(select => {
+        const task = select.dataset.task;
+        const role = select.dataset.role;
+        const value = select.value;
+
+        if (!raciData[task]) {
+          raciData[task] = {};
+        }
+        raciData[task][role] = value;
+      });
+
+      const matrix = {
+        ...window.currentMatrix.projectData,
+        roles: window.currentMatrix.roles,
+        activities: window.currentMatrix.activities.map(activity => ({
+          ...activity,
+          raci: raciData[activity.id] || activity.raci
+        })),
+        savedAt: new Date().toISOString()
+      };
+
+      BaileyDB.saveRACIMatrix(matrix);
+      Notifications.show('RACI Matrix saved successfully', 'success');
+      loadSavedMatrices();
+    });
+
+    // Export as CSV
+    document.getElementById('exportMatrixBtn').addEventListener('click', function() {
+      if (!window.currentMatrix) {
+        Notifications.show('No matrix to export', 'warning');
+        return;
+      }
+
+      const table = document.getElementById('raciTable');
+      let csv = [];
+
+      // Headers
+      const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+      csv.push(headers.join(','));
+
+      // Rows
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        const row = [];
+        const tds = tr.querySelectorAll('td');
+
+        // Task and Clause
+        row.push(`"${tds[0].textContent}"`);
+        row.push(tds[1].textContent);
+
+        // RACI values
+        for (let i = 2; i < tds.length; i++) {
+          const select = tds[i].querySelector('select');
+          row.push(select ? select.value : '');
+        }
+
+        csv.push(row.join(','));
+      });
+
+      // Download
+      const csvContent = csv.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${window.currentMatrix.projectData.projectISONumber}_RACI_Matrix.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      Notifications.show('Matrix exported as CSV', 'success');
+    });
+
+    // Load saved matrices
+    function loadSavedMatrices() {
+      const matrices = BaileyDB.getRACIMatrices();
+      const container = document.getElementById('savedMatricesContainer');
+
+      if (matrices.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No saved matrices yet. Create your first matrix above.</p>';
+        return;
+      }
+
+      const html = `
+        <div class="widget widget--full">
+          <div class="widget__body widget__body--no-padding">
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Project Name</th>
+                    <th>ISO Number</th>
+                    <th>Matrix Type</th>
+                    <th>Saved Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${matrices.map(matrix => `
+                    <tr>
+                      <td><strong>${matrix.projectName}</strong></td>
+                      <td>${matrix.projectISONumber}</td>
+                      <td>
+                        <span class="status-badge status-badge--info">
+                          ${matrix.matrixType === 'lead_appointed' ? 'Lead Appointed' : matrix.matrixType === 'appointed' ? 'Appointed Party' : 'Custom'}
+                        </span>
+                      </td>
+                      <td>${new Date(matrix.savedAt || matrix.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <button class="btn btn--small btn--secondary" onclick="viewMatrix('${matrix.id}')">View</button>
+                        <button class="btn btn--small btn--danger" onclick="deleteMatrix('${matrix.id}')">Delete</button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function viewMatrix(id) {
+      const matrix = BaileyDB.getRACIMatrices().find(m => m.id === id);
+      if (!matrix) {
+        Notifications.show('Matrix not found', 'danger');
+        return;
+      }
+
+      renderMatrix(matrix, matrix.roles, matrix.activities);
+      document.getElementById('matrixSection').classList.remove('hidden');
+      document.getElementById('matrixSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function deleteMatrix(id) {
+      if (confirm('Are you sure you want to delete this RACI matrix?')) {
+        const matrices = BaileyDB.getRACIMatrices();
+        const filtered = matrices.filter(m => m.id !== id);
+        localStorage.setItem('bailey_raci_matrices', JSON.stringify(filtered));
+        Notifications.show('Matrix deleted', 'success');
+        loadSavedMatrices();
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedMatrices();
+    });
+  </script>
+</body>
+</html>
