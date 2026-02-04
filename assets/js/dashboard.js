@@ -21,6 +21,9 @@ const BaileyDB = {
     if (!localStorage.getItem('bailey_raci_matrices')) {
       localStorage.setItem('bailey_raci_matrices', JSON.stringify([]));
     }
+    if (!localStorage.getItem('bailey_beps')) {
+      localStorage.setItem('bailey_beps', JSON.stringify([]));
+    }
   },
 
   /**
@@ -154,6 +157,62 @@ const BaileyDB = {
   },
 
   /**
+   * Save BEP (BIM Execution Plan)
+   * @param {Object} bep - BEP object
+   */
+  saveBEP(bep) {
+    const beps = this.getBEPs();
+    const existingIndex = beps.findIndex(b => b.id === bep.id);
+
+    if (existingIndex >= 0) {
+      beps[existingIndex] = { ...beps[existingIndex], ...bep, updatedAt: new Date().toISOString() };
+    } else {
+      bep.id = bep.id || this.generateId();
+      bep.createdAt = new Date().toISOString();
+      bep.updatedAt = new Date().toISOString();
+      beps.push(bep);
+    }
+
+    localStorage.setItem('bailey_beps', JSON.stringify(beps));
+    return bep;
+  },
+
+  /**
+   * Get all BEPs
+   */
+  getBEPs() {
+    return JSON.parse(localStorage.getItem('bailey_beps') || '[]');
+  },
+
+  /**
+   * Get BEP by ID
+   * @param {string} id - BEP ID
+   */
+  getBEP(id) {
+    const beps = this.getBEPs();
+    return beps.find(b => b.id === id);
+  },
+
+  /**
+   * Get BEPs by project ID
+   * @param {string} projectId - Project ID
+   */
+  getBEPsByProject(projectId) {
+    const beps = this.getBEPs();
+    return beps.filter(b => b.projectId === projectId);
+  },
+
+  /**
+   * Delete BEP
+   * @param {string} id - BEP ID
+   */
+  deleteBEP(id) {
+    const beps = this.getBEPs();
+    const filtered = beps.filter(b => b.id !== id);
+    localStorage.setItem('bailey_beps', JSON.stringify(filtered));
+  },
+
+  /**
    * Generate unique ID
    */
   generateId() {
@@ -168,6 +227,7 @@ const BaileyDB = {
       projects: this.getProjects(),
       templates: this.getTemplates(),
       raciMatrices: this.getRACIMatrices(),
+      beps: this.getBEPs(),
       exportedAt: new Date().toISOString()
     };
   },
@@ -185,6 +245,9 @@ const BaileyDB = {
     }
     if (data.raciMatrices) {
       localStorage.setItem('bailey_raci_matrices', JSON.stringify(data.raciMatrices));
+    }
+    if (data.beps) {
+      localStorage.setItem('bailey_beps', JSON.stringify(data.beps));
     }
   }
 };

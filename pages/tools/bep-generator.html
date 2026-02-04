@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEP Generator | Bailey Partnership ISO19650 Dashboard</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <style>
+        .bep-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .bep-progress {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: -1;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-step.active .step-number {
+            background: var(--bailey-primary);
+            color: white;
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--bailey-success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .bep-form-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .bep-form-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bailey-primary);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--bailey-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="email"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .info-box {
+            background: #f0f7ff;
+            border-left: 4px solid var(--bailey-primary);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--bailey-primary);
+        }
+
+        .loin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .loin-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .loin-card h4 {
+            color: var(--bailey-primary);
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group {
+            margin: 1rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--bailey-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bailey-primary-dark);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: var(--bailey-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #28a745;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .team-member {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .deliverable-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .add-button {
+            background: var(--bailey-secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .add-button:hover {
+            background: #e09000;
+        }
+
+        .remove-button {
+            background: #dc3545;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .summary-section {
+            margin-bottom: 2rem;
+        }
+
+        .summary-title {
+            font-weight: 600;
+            color: var(--bailey-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-content {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .project-selector {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .project-selector h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h1>Bailey Partnership</h1>
+            <p>ISO19650 Dashboard</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="../../index.html">Dashboard</a></li>
+            <li><a href="project-setup.html">Project Setup</a></li>
+            <li><a href="project-list.html">Project List</a></li>
+            <li><a href="raci-matrix.html">RACI Matrix</a></li>
+            <li><a href="bep-generator.html" class="active">BEP Generator</a></li>
+            <li><a href="workflowmax-sync.html">WorkflowMax Sync</a></li>
+            <li><a href="export-import.html">Export/Import</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="bep-container">
+            <div class="page-header">
+                <h1>BIM Execution Plan (BEP) Generator</h1>
+                <p>Create a comprehensive BIM Execution Plan aligned with ISO 19650 standards</p>
+            </div>
+
+            <!-- Project Selector -->
+            <div class="project-selector">
+                <h3>Select Project</h3>
+                <p>Choose an existing project to pre-populate the BEP with project information, or continue without selection.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectSelect">Project</label>
+                        <select id="projectSelect">
+                            <option value="">-- Select a project --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bepType">BEP Type</label>
+                        <select id="bepType" required>
+                            <option value="">-- Select BEP Type --</option>
+                            <option value="pre-appointment">Pre-Appointment BEP (Tender)</option>
+                            <option value="post-appointment">Post-Appointment BEP (Delivery)</option>
+                        </select>
+                        <div class="help-text">Pre-appointment BEP is submitted with tender; Post-appointment BEP is confirmed after appointment</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="bep-progress">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Project Info</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Roles & Team</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Standards</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">LOIN</div>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">CDE & Process</div>
+                    </div>
+                    <div class="progress-step" data-step="6">
+                        <div class="step-number">6</div>
+                        <div class="step-label">Deliverables</div>
+                    </div>
+                    <div class="progress-step" data-step="7">
+                        <div class="step-number">7</div>
+                        <div class="step-label">Review</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BEP Form -->
+            <form id="bepForm">
+                <!-- Section 1: Project Information -->
+                <div class="bep-form-section active" data-section="1">
+                    <div class="section-header">
+                        <h2 class="section-title">1. Project Information</h2>
+                        <p class="section-description">Basic project details and scope definition</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectNumber">Project Number *</label>
+                            <input type="text" id="projectNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectISONumber">ISO 19650 Project Number</label>
+                            <input type="text" id="projectISONumber" placeholder="e.g., 25001">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientName">Client/Appointing Party *</label>
+                            <input type="text" id="clientName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectLocation">Project Location</label>
+                            <input type="text" id="projectLocation">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectValue">Project Value (£)</label>
+                            <input type="text" id="projectValue" placeholder="e.g., 5000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDuration">Project Duration</label>
+                            <input type="text" id="projectDuration" placeholder="e.g., 18 months">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectStartDate">Project Start Date</label>
+                            <input type="date" id="projectStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectEndDate">Expected Completion Date</label>
+                            <input type="date" id="projectEndDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectPhase">Current Project Phase *</label>
+                        <select id="projectPhase" required>
+                            <option value="">-- Select Phase --</option>
+                            <option value="tender">5.3 - Tender Response</option>
+                            <option value="appointment">5.4 - Appointment</option>
+                            <option value="mobilisation">5.5 - Mobilisation</option>
+                            <option value="production">5.6 - Collaborative Production</option>
+                            <option value="delivery">5.7 - Information Model Delivery</option>
+                            <option value="closeout">5.8 - Project Close-out</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectType">Project Type *</label>
+                        <select id="projectType" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="newbuild">New Build</option>
+                            <option value="refurbishment">Refurbishment</option>
+                            <option value="extension">Extension</option>
+                            <option value="fitout">Fit-out</option>
+                            <option value="infrastructure">Infrastructure</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">Project Description *</label>
+                        <textarea id="projectDescription" required placeholder="Provide a brief description of the project scope, objectives, and key deliverables"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="baileyRole">Bailey Partnership Role *</label>
+                        <select id="baileyRole" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="lead_appointed">Lead Appointed Party</option>
+                            <option value="appointed">Appointed Party</option>
+                            <option value="consultant">Consultant / Task Team</option>
+                        </select>
+                        <div class="help-text">This determines responsibilities under ISO 19650-2</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div></div>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 2: Roles and Responsibilities -->
+                <div class="bep-form-section" data-section="2">
+                    <div class="section-header">
+                        <h2 class="section-title">2. Roles and Responsibilities</h2>
+                        <p class="section-description">Define information management functions and team structure (ISO 19650-2 Clause 5.1.3)</p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">ISO 19650-2 Information Management Functions</div>
+                        <p>The following roles should be assigned according to Annex A of ISO 19650-2</p>
+                    </div>
+
+                    <h3>Key Information Management Roles</h3>
+
+                    <div class="form-group">
+                        <label for="projectLead">Project Lead / Project Manager</label>
+                        <input type="text" id="projectLead" placeholder="Name and contact">
+                        <div class="help-text">Overall project management and coordination</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bimManager">BIM Manager / Information Manager *</label>
+                        <input type="text" id="bimManager" required placeholder="Name and contact">
+                        <div class="help-text">Responsible for implementing and managing information processes</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskTeamManager">Task Team Manager(s)</label>
+                        <input type="text" id="taskTeamManager" placeholder="Name(s) and contact">
+                        <div class="help-text">Manages individual task teams and their information deliverables</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="documentController">Document Controller / CDE Manager</label>
+                        <input type="text" id="documentController" placeholder="Name and contact">
+                        <div class="help-text">Manages document control and CDE workflows</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="designCoordinator">Design Coordinator</label>
+                        <input type="text" id="designCoordinator" placeholder="Name and contact">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modelCoordinator">Model Coordinator</label>
+                        <input type="text" id="modelCoordinator" placeholder="Name and contact">
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Task Teams</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Define the task teams involved in the project</p>
+
+                    <div id="taskTeamsList">
+                        <div class="team-member">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Discipline</label>
+                                    <select class="taskTeamDiscipline">
+                                        <option value="Architecture">Architecture</option>
+                                        <option value="Structural">Structural Engineering</option>
+                                        <option value="MEP">MEP Engineering</option>
+                                        <option value="Civil">Civil Engineering</option>
+                                        <option value="Landscape">Landscape Architecture</option>
+                                        <option value="Quantity Surveying">Quantity Surveying</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Organization/Lead</label>
+                                    <input type="text" class="taskTeamOrg" placeholder="Organization name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Responsibilities</label>
+                                <input type="text" class="taskTeamResp" placeholder="Key responsibilities and deliverables">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-button" onclick="addTaskTeam()">+ Add Task Team</button>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 3: Standards and Procedures -->
+                <div class="bep-form-section" data-section="3">
+                    <div class="section-header">
+                        <h2 class="section-title">3. Standards and Procedures</h2>
+                        <p class="section-description">Define technical standards, software, and naming conventions</p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">ISO 19650 Compliance</div>
+                        <p>This section defines the technical framework for information production and management</p>
+                    </div>
+
+                    <h3>Software and Technology</h3>
+
+                    <div class="checkbox-group">
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Authoring Software</label>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="soft_revit" value="Autodesk Revit">
+                            <label for="soft_revit">Autodesk Revit</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="soft_archicad" value="ArchiCAD">
+                            <label for="soft_archicad">ArchiCAD</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="soft_autocad" value="AutoCAD">
+                            <label for="soft_autocad">AutoCAD</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="soft_other" value="Other">
+                            <label for="soft_other">Other (specify in notes)</label>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Collaboration Tools</label>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="collab_navis" value="Navisworks">
+                            <label for="collab_navis">Navisworks</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="collab_bim360" value="BIM 360">
+                            <label for="collab_bim360">BIM 360 / ACC</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="collab_solibri" value="Solibri">
+                            <label for="collab_solibri">Solibri</label>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">File Formats</h3>
+
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="format_rvt" value="RVT" checked>
+                            <label for="format_rvt">Native (RVT, PLN, etc.)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="format_ifc" value="IFC" checked>
+                            <label for="format_ifc">IFC (Industry Foundation Classes)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="format_dwg" value="DWG" checked>
+                            <label for="format_dwg">DWG</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="format_pdf" value="PDF" checked>
+                            <label for="format_pdf">PDF</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="format_nwc" value="NWC">
+                            <label for="format_nwc">NWC/NWD (Navisworks)</label>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Naming Conventions</h3>
+
+                    <div class="form-group">
+                        <label for="namingStandard">File Naming Standard *</label>
+                        <select id="namingStandard" required>
+                            <option value="iso19650">ISO 19650 (Project-Originator-Volume-Level-Type-Role-Number)</option>
+                            <option value="custom">Custom (describe below)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="namingExample">Example File Name</label>
+                        <input type="text" id="namingExample" placeholder="e.g., 25001-BPG-XX-XX-M3-A-0001_S2_P01.rvt" readonly>
+                        <div class="help-text">Format: Project-Originator-Volume-Level-Type-Role-Number_Status_Revision</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="originatorCode">Originator Code *</label>
+                        <input type="text" id="originatorCode" required placeholder="e.g., BPG" maxlength="5">
+                        <div class="help-text">3-5 character code for Bailey Partnership (e.g., BPG)</div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Standards and Protocols</h3>
+
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="std_iso19650" value="ISO 19650" checked>
+                            <label for="std_iso19650">ISO 19650-1 & ISO 19650-2</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="std_loin" value="BS EN ISO 7817-1" checked>
+                            <label for="std_loin">BS EN ISO 7817-1:2024 (Level of Information Need)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="std_pas1192" value="PAS 1192">
+                            <label for="std_pas1192">PAS 1192 Series (legacy)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="std_uniclass" value="Uniclass">
+                            <label for="std_uniclass">Uniclass 2015</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalStandards">Additional Standards/Requirements</label>
+                        <textarea id="additionalStandards" placeholder="List any project-specific or client standards"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 4: Level of Information Need (LOIN) -->
+                <div class="bep-form-section" data-section="4">
+                    <div class="section-header">
+                        <h2 class="section-title">4. Level of Information Need (LOIN)</h2>
+                        <p class="section-description">Define information requirements according to BS EN ISO 7817-1:2024</p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">What is LOIN?</div>
+                        <p><strong>Level of Information Need (LOIN)</strong> specifies the extent and granularity of information required at each project stage. It consists of three components:</p>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li><strong>Geometrical Information:</strong> Level of detail and accuracy of 3D models</li>
+                            <li><strong>Alphanumeric Information:</strong> Non-graphical data and properties</li>
+                            <li><strong>Documentation:</strong> Associated documents and specifications</li>
+                        </ul>
+                    </div>
+
+                    <h3>Project Stage Definitions</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Define LOIN requirements for each project stage (RIBA Plan of Work or equivalent)</p>
+
+                    <div class="loin-grid">
+                        <!-- Stage 2: Concept Design -->
+                        <div class="loin-card">
+                            <h4>Stage 2: Concept</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage2_geo">
+                                    <option value="conceptual">Conceptual (masses/volumes)</option>
+                                    <option value="approximate">Approximate geometry</option>
+                                    <option value="precise">Precise geometry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage2_data">
+                                    <option value="minimal">Minimal (basic properties)</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="detailed">Detailed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage2_doc">
+                                    <option value="basic">Basic drawings</option>
+                                    <option value="standard">Standard set</option>
+                                    <option value="comprehensive">Comprehensive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage 3: Spatial Coordination -->
+                        <div class="loin-card">
+                            <h4>Stage 3: Spatial Coord.</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage3_geo">
+                                    <option value="conceptual">Conceptual (masses/volumes)</option>
+                                    <option value="approximate" selected>Approximate geometry</option>
+                                    <option value="precise">Precise geometry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage3_data">
+                                    <option value="minimal">Minimal (basic properties)</option>
+                                    <option value="moderate" selected>Moderate</option>
+                                    <option value="detailed">Detailed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage3_doc">
+                                    <option value="basic">Basic drawings</option>
+                                    <option value="standard" selected>Standard set</option>
+                                    <option value="comprehensive">Comprehensive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage 4: Technical Design -->
+                        <div class="loin-card">
+                            <h4>Stage 4: Technical</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage4_geo">
+                                    <option value="conceptual">Conceptual (masses/volumes)</option>
+                                    <option value="approximate">Approximate geometry</option>
+                                    <option value="precise" selected>Precise geometry</option>
+                                    <option value="exact">Exact/As-designed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage4_data">
+                                    <option value="minimal">Minimal (basic properties)</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="detailed" selected>Detailed</option>
+                                    <option value="comprehensive">Comprehensive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage4_doc">
+                                    <option value="basic">Basic drawings</option>
+                                    <option value="standard">Standard set</option>
+                                    <option value="comprehensive" selected>Comprehensive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage 5: Construction -->
+                        <div class="loin-card">
+                            <h4>Stage 5: Construction</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage5_geo">
+                                    <option value="precise">Precise geometry</option>
+                                    <option value="exact" selected>Exact/As-designed</option>
+                                    <option value="fabrication">Fabrication ready</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage5_data">
+                                    <option value="moderate">Moderate</option>
+                                    <option value="detailed">Detailed</option>
+                                    <option value="comprehensive" selected>Comprehensive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage5_doc">
+                                    <option value="standard">Standard set</option>
+                                    <option value="comprehensive" selected>Comprehensive</option>
+                                    <option value="fabrication">Fabrication docs</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage 6: Handover -->
+                        <div class="loin-card">
+                            <h4>Stage 6: Handover</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage6_geo">
+                                    <option value="exact">Exact/As-designed</option>
+                                    <option value="asbuilt" selected>As-Built</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage6_data">
+                                    <option value="detailed">Detailed</option>
+                                    <option value="comprehensive" selected>Comprehensive</option>
+                                    <option value="operational">Operational (O&M)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage6_doc">
+                                    <option value="comprehensive">Comprehensive</option>
+                                    <option value="asbuilt" selected>As-Built + O&M</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stage 7: In-Use -->
+                        <div class="loin-card">
+                            <h4>Stage 7: In-Use</h4>
+                            <div class="form-group">
+                                <label>Geometric Detail</label>
+                                <select id="loin_stage7_geo">
+                                    <option value="asbuilt" selected>As-Built (verified)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Richness</label>
+                                <select id="loin_stage7_data">
+                                    <option value="comprehensive">Comprehensive</option>
+                                    <option value="operational" selected>Operational (O&M)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation</label>
+                                <select id="loin_stage7_doc">
+                                    <option value="asbuilt" selected>As-Built + O&M</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Model Element Requirements</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Specify element categories and their information requirements</p>
+
+                    <div class="form-group">
+                        <label for="loinNotes">Additional LOIN Requirements</label>
+                        <textarea id="loinNotes" placeholder="Specify any element-specific requirements, e.g., 'All MEP equipment requires manufacturer, model number, and maintenance schedule'"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 5: CDE and Information Management -->
+                <div class="bep-form-section" data-section="5">
+                    <div class="section-header">
+                        <h2 class="section-title">5. Common Data Environment (CDE) and Information Management</h2>
+                        <p class="section-description">Define CDE workflows and information exchange protocols (ISO 19650-1 Clause 5.4)</p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">CDE Workflow States</div>
+                        <p>ISO 19650 defines a standardized workflow with four states:</p>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li><strong>Work in Progress (WIP):</strong> Information being developed</li>
+                            <li><strong>Shared:</strong> Information shared for coordination/review</li>
+                            <li><strong>Published:</strong> Approved information for use</li>
+                            <li><strong>Archive:</strong> Superseded or historical information</li>
+                        </ul>
+                    </div>
+
+                    <h3>CDE Platform</h3>
+
+                    <div class="form-group">
+                        <label for="cdeProvider">CDE Provider *</label>
+                        <select id="cdeProvider" required>
+                            <option value="">-- Select Provider --</option>
+                            <option value="acc">Autodesk Construction Cloud (ACC)</option>
+                            <option value="bim360">BIM 360</option>
+                            <option value="aconex">Aconex</option>
+                            <option value="viewpoint">Viewpoint</option>
+                            <option value="procore">Procore</option>
+                            <option value="sharepoint">Microsoft SharePoint</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cdeUrl">CDE URL / Access Details</label>
+                        <input type="text" id="cdeUrl" placeholder="https://...">
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Folder Structure</h3>
+
+                    <div class="form-group">
+                        <label for="folderStructure">Volume/Folder Organization</label>
+                        <textarea id="folderStructure" placeholder="Describe the folder structure, e.g.:&#10;- WIP/&#10;  - Architecture/&#10;  - Structure/&#10;  - MEP/&#10;- Shared/&#10;- Published/&#10;- Archive/"></textarea>
+                        <div class="help-text">Define how information containers will be organized in the CDE</div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Information Exchange Protocol</h3>
+
+                    <div class="form-group">
+                        <label for="reviewCycle">Review and Approval Cycle</label>
+                        <select id="reviewCycle">
+                            <option value="weekly">Weekly</option>
+                            <option value="biweekly" selected>Bi-weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="stage">At stage gates</option>
+                            <option value="custom">Custom (describe below)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coordinationMeetings">Coordination Meeting Frequency</label>
+                        <select id="coordinationMeetings">
+                            <option value="weekly" selected>Weekly</option>
+                            <option value="biweekly">Bi-weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="asneeded">As needed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clashDetection">Clash Detection Protocol</label>
+                        <textarea id="clashDetection" placeholder="Describe clash detection process, tools (e.g., Navisworks), frequency, and resolution workflow"></textarea>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Quality Assurance</h3>
+
+                    <div class="form-group">
+                        <label for="qaProcess">Quality Assurance Process</label>
+                        <textarea id="qaProcess" placeholder="Describe QA checks, validation rules, and approval workflows"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modelAudit">Model Audit Procedures</label>
+                        <textarea id="modelAudit" placeholder="Describe model audit frequency, checks, and reporting"></textarea>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Information Security</h3>
+
+                    <div class="form-group">
+                        <label for="accessControl">Access Control and Permissions</label>
+                        <textarea id="accessControl" placeholder="Describe user access levels, permissions structure, and security protocols"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataBackup">Data Backup and Recovery</label>
+                        <textarea id="dataBackup" placeholder="Describe backup frequency, retention policy, and recovery procedures"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 6: Information Deliverables -->
+                <div class="bep-form-section" data-section="6">
+                    <div class="section-header">
+                        <h2 class="section-title">6. Information Deliverables</h2>
+                        <p class="section-description">Master Information Delivery Plan (MIDP) and key deliverables</p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">MIDP Overview</div>
+                        <p>The Master Information Delivery Plan (MIDP) consolidates all Task Information Delivery Plans (TIDPs) into a single schedule showing when information will be delivered throughout the project.</p>
+                    </div>
+
+                    <h3>Key Project Deliverables</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Define major information deliverables and their delivery dates</p>
+
+                    <div id="deliverablesList">
+                        <div class="deliverable-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Deliverable</label>
+                                    <input type="text" class="deliverableName" placeholder="e.g., Architectural Model - Stage 3" value="Architectural Model - Stage 3">
+                                </div>
+                                <div class="form-group">
+                                    <label>Responsible Party</label>
+                                    <input type="text" class="deliverableResponsible" placeholder="Team/Person" value="Architecture Task Team">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Delivery Date</label>
+                                    <input type="date" class="deliverableDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Format</label>
+                                    <input type="text" class="deliverableFormat" placeholder="e.g., RVT, IFC, PDF" value="RVT, IFC">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-button" onclick="addDeliverable()">+ Add Deliverable</button>
+
+                    <h3 style="margin-top: 2rem;">Information Exchanges</h3>
+
+                    <div class="form-group">
+                        <label for="exchangeSchedule">Information Exchange Schedule</label>
+                        <textarea id="exchangeSchedule" placeholder="Describe when and how information will be exchanged between parties (e.g., 'Coordinated models shared bi-weekly, design information at end of each RIBA stage')"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="federationStrategy">Model Federation Strategy</label>
+                        <textarea id="federationStrategy" placeholder="Describe how individual models will be combined (e.g., 'Discipline models linked into federated coordination model in Navisworks')"></textarea>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">Handover Requirements</h3>
+
+                    <div class="form-group">
+                        <label for="handoverInfo">Asset Information Requirements (AIR)</label>
+                        <textarea id="handoverInfo" placeholder="Describe information requirements for handover and operational phase"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Handover Deliverables</label>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="handover_asbuilt" value="As-Built Models">
+                            <label for="handover_asbuilt">As-Built Information Models</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="handover_om" value="O&M Manuals">
+                            <label for="handover_om">O&M Manuals</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="handover_cob" value="COBie Data">
+                            <label for="handover_cob">COBie Data</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="handover_drawings" value="Record Drawings">
+                            <label for="handover_drawings">Record Drawings</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="handover_specs" value="Specifications">
+                            <label for="handover_specs">Specifications and Schedules</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Section 7: Review and Generate -->
+                <div class="bep-form-section" data-section="7">
+                    <div class="section-header">
+                        <h2 class="section-title">7. Review and Generate BEP</h2>
+                        <p class="section-description">Review your inputs and generate the BIM Execution Plan</p>
+                    </div>
+
+                    <div id="bepSummary">
+                        <!-- Summary will be populated by JavaScript -->
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalNotes">Additional Notes and Project-Specific Requirements</label>
+                        <textarea id="additionalNotes" rows="5" placeholder="Add any additional information, project-specific requirements, risks, or constraints"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">Previous</button>
+                        <button type="button" class="btn btn-success" onclick="saveBEP()">Save BEP</button>
+                    </div>
+
+                    <div style="margin-top: 1rem; text-align: right;">
+                        <button type="button" class="btn btn-primary" onclick="exportBEP()">Export as Document</button>
+                        <button type="button" class="btn btn-secondary" onclick="printBEP()">Print BEP</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/dashboard.js"></script>
+    <script src="bep-generator.js"></script>
+</body>
+</html>
